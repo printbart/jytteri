@@ -6,6 +6,8 @@ import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import { request, PERMISSIONS } from 'react-native-permissions';
 
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 
 class Map extends Component {
   constructor(props){
@@ -61,12 +63,9 @@ class Map extends Component {
         animationType="slide">
           <View style={styles.modalView}>
             <View style = {styles.modalTopView}>
-              <View style = {styles.cancelView}>
-                <Text style = {styles.cancelText} 
-                onPress={this.onPressSearchModal.bind(this, false)}>
-                  X
-                </Text>
-              </View>
+              <TouchableOpacity style = {styles.cancelView} onPress={this.onPressSearchModal.bind(this, false)}>
+                <MaterialIcons name="close" size={25} color="grey"/>
+              </TouchableOpacity>
               <View style = {styles.searchTextInputView}>
                 <TextInput style = {styles.searchTextInput} placeholder="Where?"/>
               </View>
@@ -79,7 +78,9 @@ class Map extends Component {
         showsUserLocation={true}
         provider = {PROVIDER_GOOGLE}
         initialRegion = {this.state.initialPosition}/>
-
+        <TouchableOpacity style = {styles.locateMeButtonView} onPress= {this.locateCurrentPosition()}>
+          <MaterialIcons name="my-location" size={25} color="#3C3C3D"/>
+        </TouchableOpacity>
         <View style={styles.bottomModalView}>
           <TouchableOpacity style = {styles.bottomHeaderView} onPress={this.onPressSearchModal.bind(this, true)}>
             <Text style = {styles.bottomHeaderText}>Where?</Text>
@@ -96,6 +97,24 @@ const styles = StyleSheet.create({
   },
   mapView: {
     flex: 1,
+  },
+  locateMeButtonView:{
+    width: 40,
+    height: 40,
+    position: 'absolute',
+    backgroundColor: "#f5f5f5",
+    right: 10,
+    bottom: '25%',
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: "#3C3C3D",
+    shadowRadius: 7.5,
+    shadowOpacity: 0.5,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
   },
   modalView:{
     flex: 1,
