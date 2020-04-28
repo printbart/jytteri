@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Button, Platform } from 'react-native';
+import { StyleSheet, View, Text, Button, Platform, Alert } from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 
 import Geolocation from '@react-native-community/geolocation';
 import { request, PERMISSIONS } from 'react-native-permissions';
 
 export default class App extends Component {
+  constructor(props){
+    super(props);
+    this.state = {}
+  }
 
   componentDidMount(){
     this.requestLocationPermission();
@@ -26,7 +30,18 @@ export default class App extends Component {
     Geolocation.getCurrentPosition(
       position => {
         console.log(JSON.stringify(position));
-      }
+
+        let initialPosition = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          latitudeDelta: 0.09,
+          longitudeDelta: 0.035
+        }
+
+        this.setState({ initialPosition });
+      },
+      error => Alert.alert(error.message),
+      {enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
     )
   }
 
@@ -34,14 +49,9 @@ export default class App extends Component {
     return(
       <MapView 
       style = {styles.mapView}
-      showUserLocation={true}
+      showsUserLocation={true}
       provider = {PROVIDER_GOOGLE}
-      region = {{
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.09,
-        longitudeDelta: 0.035
-      }}/>
+      initialRegion = {this.state.initialPosition}/>
     );
   }
 }
