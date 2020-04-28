@@ -55,6 +55,13 @@ class Map extends Component {
     )
   }
 
+  centerMap = () => {
+    const{ latitude, longitude, latitudeDelta, longitudeDelta } = this.state.initialPosition;
+    this.map.animateToRegion({
+      latitude, longitude, latitudeDelta, longitudeDelta
+    })
+  }
+
   render(){
     return(
       <View style = {styles.mapContainer}>
@@ -75,10 +82,11 @@ class Map extends Component {
   
         <MapView 
         style = {styles.mapView}
+        ref={(map) => {this.map = map}}
         showsUserLocation={true}
         provider = {PROVIDER_GOOGLE}
         initialRegion = {this.state.initialPosition}/>
-        <TouchableOpacity style = {styles.locateMeButtonView} onPress= {this.locateCurrentPosition()}>
+        <TouchableOpacity style = {styles.locateMeButtonView} onPress = {this.centerMap}>
           <MaterialIcons name="my-location" size={25} color="#3C3C3D"/>
         </TouchableOpacity>
         <View style={styles.bottomModalView}>
