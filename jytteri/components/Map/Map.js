@@ -85,31 +85,29 @@ class Map extends Component {
     }
   }
 
-onPressLocation(item){
-  this.onPressSearchModal(false);
+  async onPressLocation(item){
+    this.onPressSearchModal(false);
     let r = {
       latitude: item.geometry.location.lat,
       longitude: item.geometry.location.lng,
-      latitudeDelta: 0.5,
-      longitudeDelta: 0.35,
-  };
-  this.setState({markers: [r]});
-  this.map.animateToRegion(r, 2000);
-    /*try{
-      await this.setState(
-        {initialPosition:
-          {latitude: item.geometry.location.lat,
-          longitude: item.geometry.location.lng,
-          latitudeDelta: 0.09,
-          longitudeDelta: 0.035,}
-        }
-      );
-      await this.centerMap();
-      await this.onPressSearchModal(false);
-    }
-    catch (err){
-      console.log(err);
-    }*/
+      latitudeDelta: 0.09,
+      longitudeDelta: 0.035,
+    };
+    await this.setState({markers: [r]});
+    await this.map.animateToRegion(r, 2000);
+  }
+
+  onPressMarker(input){
+    let r = {
+      latitude: input.latitude,
+      longitude: input.longitude,
+      latitudeDelta: 0.09,
+      longitudeDelta: 0.035,
+    };
+    this.map.animateToRegion(r, 1000);
+  }
+
+  onPressSetLocation(){
   }
 
   renderSearchLocation = ({item}) =>{
@@ -131,7 +129,6 @@ onPressLocation(item){
   }
 
   render(){
-    console.log(this.state.markers);
     return(
       <View style = {styles.mapContainer}>
         <Modal 
@@ -166,8 +163,8 @@ onPressLocation(item){
             return(
             <Marker
             key = {index}
-            coordinate={{latitude: value.latitude, longitude: value.longitude}}>
-
+            coordinate={{latitude: value.latitude, longitude: value.longitude}}
+            onPress={this.onPressMarker.bind(this, value)}>
             </Marker>
             )
           })}
@@ -179,6 +176,14 @@ onPressLocation(item){
           <TouchableOpacity style = {styles.bottomHeaderView} onPress={this.onPressSearchModal.bind(this, true)}>
             <Text style = {styles.bottomHeaderText}>Where?</Text>
           </TouchableOpacity>
+          <View style = {styles.noticeView}>
+            {!this.state.markers.length ?
+            <Text style = {styles.noticeText}>Find a location</Text>
+           :
+          <TouchableOpacity style = {styles.addLocationButtonView} onPress = {this.onPressSetLocation.bind(this)}>
+            <Text style = {styles.addLocationButtonText}>Set Location</Text>
+          </TouchableOpacity>}
+          </View>
         </View>
       </View>
     );
@@ -289,6 +294,29 @@ const styles = StyleSheet.create({
   searchLocationAddressText: {
     fontSize: 15,
     fontWeight: "200",
+    fontFamily: 'Helvetica Neue',
+  },
+  noticeView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noticeText: {
+    fontSize: 30,
+    fontWeight: "200",
+    fontFamily: 'Helvetica Neue',
+  },
+  addLocationButtonView:{
+    width: "100%",
+    alignItems: 'center',
+    backgroundColor: "#3C3C3D",
+    margin: 5,
+    padding: 10,
+    borderRadius: 10,
+  },
+  addLocationButtonText:{
+    color: "white",
+    fontSize: 20,
     fontFamily: 'Helvetica Neue',
   }
 });
