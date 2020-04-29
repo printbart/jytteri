@@ -1,20 +1,28 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Button, TextInput, Modal, TouchableOpacity, Platform, Alert } from 'react-native';
+import { StyleSheet, View, Image, Text, FlatList, TextInput, Modal, TouchableOpacity, Platform, Alert } from 'react-native';
 
 //libaries
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import { request, PERMISSIONS } from 'react-native-permissions';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
+import _ from "lodash";
+
+//api key
+import {googleMapSearchApiKey} from "../../apiKey";
 
 
 class Map extends Component {
   constructor(props){
     super(props);
     this.state = {
-      searchModalVisible: false
+      searchModalVisible: false,
+      searchData: [],
+      markers: [],
     }
+    this.onChangeDestinationDebounced = _.debounce(this.onChangeDestination, 1000);
   }
 
   componentDidMount(){
@@ -22,8 +30,7 @@ class Map extends Component {
   }
 
   onPressSearchModal(input){
-    console.log(input);
-    this.setState({searchModalVisible: input});
+    this.setState({searchModalVisible: input, searchData: [],});
   }
 
   requestLocationPermission = async() => {
@@ -57,12 +64,74 @@ class Map extends Component {
 
   centerMap = () => {
     const{ latitude, longitude, latitudeDelta, longitudeDelta } = this.state.initialPosition;
+    console.log(this.state.initialPosition);
     this.map.animateToRegion({
       latitude, longitude, latitudeDelta, longitudeDelta
-    })
+    });
+  }
+
+  async onChangeDestination(destination){
+    this.setState({ destination });
+    const apiUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?input=${destination}&location=${this.state.initialPosition.latitude},${this.state.initialPosition.longitude}&radius=2000&key=${googleMapSearchApiKey}`;
+    try{
+      const result = await fetch(apiUrl);
+      const json = await result.json();
+      this.setState({
+        searchData: json.results
+      })
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+
+onPressLocation(item){
+  this.onPressSearchModal(false);
+    let r = {
+      latitude: item.geometry.location.lat,
+      longitude: item.geometry.location.lng,
+      latitudeDelta: 0.5,
+      longitudeDelta: 0.35,
+  };
+  this.setState({markers: [r]});
+  this.map.animateToRegion(r, 2000);
+    /*try{
+      await this.setState(
+        {initialPosition:
+          {latitude: item.geometry.location.lat,
+          longitude: item.geometry.location.lng,
+          latitudeDelta: 0.09,
+          longitudeDelta: 0.035,}
+        }
+      );
+      await this.centerMap();
+      await this.onPressSearchModal(false);
+    }
+    catch (err){
+      console.log(err);
+    }*/
+  }
+
+  renderSearchLocation = ({item}) =>{
+    return(
+      <TouchableOpacity style = {styles.searchLocationView} onPress = {this.onPressLocation.bind(this, item)}>
+        <View style = {styles.searchLocationIconView}>
+          <Image source={{uri: item.icon}} style = {styles.searchLocationIconImage}/>
+        </View>
+        <View style = {styles.searchLocationBodyView}>
+          <View style = {styles.searchLocationNameView}>
+            <Text style = {styles.searchLocationNameText}>{item.name}</Text>
+          </View>
+          <View style = {styles.searchLocationAddressView}>
+            <Text style = {styles.searchLocationAddressText}>{item.formatted_address}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    )
   }
 
   render(){
+    console.log(this.state.markers);
     return(
       <View style = {styles.mapContainer}>
         <Modal 
@@ -74,9 +143,16 @@ class Map extends Component {
                 <MaterialIcons name="close" size={25} color="grey"/>
               </TouchableOpacity>
               <View style = {styles.searchTextInputView}>
-                <TextInput style = {styles.searchTextInput} placeholder="Where?"/>
+                <TextInput style = {styles.searchTextInput}
+                placeholder="Where?"
+                onChangeText={destination => this.onChangeDestinationDebounced(destination)}/>
               </View>
             </View>
+            <FlatList
+            data = {this.state.searchData}
+            renderItem = {this.renderSearchLocation}
+            keyExtractor = {(item)=>item.id}
+            />
           </View>
         </Modal>
   
@@ -85,7 +161,17 @@ class Map extends Component {
         ref={(map) => {this.map = map}}
         showsUserLocation={true}
         provider = {PROVIDER_GOOGLE}
-        initialRegion = {this.state.initialPosition}/>
+        initialRegion = {this.state.initialPosition}>
+          {this.state.markers.map((value, index) => {
+            return(
+            <Marker
+            key = {index}
+            coordinate={{latitude: value.latitude, longitude: value.longitude}}>
+
+            </Marker>
+            )
+          })}
+        </MapView>
         <TouchableOpacity style = {styles.locateMeButtonView} onPress = {this.centerMap}>
           <MaterialIcons name="my-location" size={25} color="#3C3C3D"/>
         </TouchableOpacity>
@@ -112,7 +198,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: "#f5f5f5",
     right: 10,
-    bottom: '25%',
+    bottom: '30%',
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
@@ -154,11 +240,11 @@ const styles = StyleSheet.create({
     padding: 5,
   },
 
-
-
   bottomModalView:{
+    height: "25%",
     padding: 10,
     backgroundColor: "white",
+    borderRadius: 20,
   },
   bottomHeaderView: {
     height: 50,
@@ -168,9 +254,42 @@ const styles = StyleSheet.create({
   },
   bottomHeaderText:{
     paddingLeft: 20,
-    fontSize: 30,
-    fontWeight: "200",
+    fontSize: 20,
     color: "#3C3C3D",
+    fontFamily: 'Helvetica Neue',
+  },
+  searchLocationView:{
+    flexDirection: 'row',
+    borderBottomColor: "lightgrey",
+    borderBottomWidth: 0.5,
+  },
+  searchLocationIconView:{
+    padding: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  searchLocationIconImage:{
+    width: 25,
+    height: 25,
+    marginRight: 5,
+  },
+  searchLocationBodyView:{
+    flexDirection: 'column',
+  },
+  searchLocationNameView:{
+    padding: 5,
+  },
+  searchLocationNameText: {
+    fontSize: 20,
+    fontFamily: 'Helvetica Neue',
+  },
+  searchLocationAddressView: {
+    padding: 5,
+  },
+  searchLocationAddressText: {
+    fontSize: 15,
+    fontWeight: "200",
+    fontFamily: 'Helvetica Neue',
   }
 });
 

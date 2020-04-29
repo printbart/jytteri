@@ -21,7 +21,9 @@ DerivedData
 *.ipa
 *.xcuserstate
 
+#Custom
 ios/jittery/AppDelegate.m
+apiKey.js
 
 # Android/IntelliJ
 #
