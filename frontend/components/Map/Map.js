@@ -28,50 +28,53 @@ class Map extends Component {
     this.requestLocationPermission();
   }
 
+  //toggle between search modal
   onPressSearchModal(input){
     this.setState({searchModalVisible: input, searchData: [],});
   }
 
+  //check if permission is enabled
   requestLocationPermission = async() => {
     if(Platform.OS === "ios"){
     var response = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-
       if(response === "granted"){
         this.locateCurrentPosition();
       }
     }
   }
 
+  //calculate my current location
   locateCurrentPosition = () => {
     Geolocation.getCurrentPosition(
       position => {
         console.log(JSON.stringify(position));
 
-        let initialPosition = {
+        let myCurrentPosition = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
           latitudeDelta: 0.09,
           longitudeDelta: 0.035,
         }
 
-        this.setState({ initialPosition });
+        this.setState({ myCurrentPosition });
       },
       error => Alert.alert(error.message),
       {enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
     )
   }
 
-  centerMap = () => {
-    const{ latitude, longitude, latitudeDelta, longitudeDelta } = this.state.initialPosition;
-    console.log(this.state.initialPosition);
+  //center your current location
+  centerYourLocation = () => {
+    const{ latitude, longitude, latitudeDelta, longitudeDelta } = this.state.myCurrentPosition;
     this.map.animateToRegion({
       latitude, longitude, latitudeDelta, longitudeDelta
     });
   }
 
+  //get information about all the searched location
   async onChangeDestination(destination){
     this.setState({ destination });
-    const apiUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?input=${destination}&location=${this.state.initialPosition.latitude},${this.state.initialPosition.longitude}&radius=2000&key=${googleMapSearchApiKey}`;
+    const apiUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?input=${destination}&location=${this.state.myCurrentPosition.latitude},${this.state.myCurrentPosition.longitude}&radius=2000&key=${googleMapSearchApiKey}`;
     try{
       const result = await fetch(apiUrl);
       const json = await result.json();
@@ -84,6 +87,7 @@ class Map extends Component {
     }
   }
 
+  //zoom too the pressed location
   async onPressLocation(item){
     this.onPressSearchModal(false);
     let r = {
@@ -96,6 +100,7 @@ class Map extends Component {
     await this.map.animateToRegion(r, 2000);
   }
 
+  //focus on the marker when pressed
   onPressMarker(input){
     let r = {
       latitude: input.latitude,
@@ -106,6 +111,7 @@ class Map extends Component {
     this.map.animateToRegion(r, 1000);
   }
 
+  //
   onPressSetLocation(){
     var location = {
       latitude: this.state.myMarker.latitude,
@@ -125,6 +131,7 @@ class Map extends Component {
     });
   }
 
+  //user search location list
   renderSearchLocation = ({item}) =>{
     return(
       <TouchableOpacity style = {styles.searchLocationView} onPress = {this.onPressLocation.bind(this, item)}>
@@ -146,6 +153,7 @@ class Map extends Component {
   render(){
     return(
       <View style = {styles.mapContainer}>
+
         <Modal 
         visible={this.state.searchModalVisible}
         animationType="slide">
@@ -173,30 +181,35 @@ class Map extends Component {
         ref={(map) => {this.map = map}}
         showsUserLocation={true}
         provider = {PROVIDER_GOOGLE}
-        initialRegion = {this.state.initialPosition}>
+        initialRegion = {this.state.myCurrentPosition}>
           
           {this.state.myMarker ?
             <Marker
             coordinate={{latitude: this.state.myMarker.latitude, longitude: this.state.myMarker.longitude}}
             onPress={this.onPressMarker.bind(this, this.state.myMarker)}>
             </Marker> : null }
+
         </MapView>
-        <TouchableOpacity style = {styles.locateMeButtonView} onPress = {this.centerMap}>
+
+        <TouchableOpacity style = {styles.locateMeButtonView} onPress = {this.centerYourLocation}>
           <MaterialIcons name="my-location" size={25} color="#3C3C3D"/>
         </TouchableOpacity>
+
         <View style={styles.bottomModalView}>
           <TouchableOpacity style = {styles.bottomHeaderView} onPress={this.onPressSearchModal.bind(this, true)}>
             <Text style = {styles.bottomHeaderText}>Where?</Text>
           </TouchableOpacity>
+          {!this.state.myMarker ?
           <View style = {styles.noticeView}>
-            {!this.state.myMarker ?
             <Text style = {styles.noticeText}>Find a location</Text>
-           :
-          <TouchableOpacity style = {styles.addLocationButtonView} onPress = {this.onPressSetLocation.bind(this)}>
-            <Text style = {styles.addLocationButtonText}>Set Location</Text>
-          </TouchableOpacity>}
-          </View>
+          </View>:
+          <View style = {styles.bottomView}>
+            <TouchableOpacity style = {styles.addLocationButtonView} onPress = {this.onPressSetLocation.bind(this)}>
+              <Text style = {styles.addLocationButtonText}>Host Event Here</Text>
+            </TouchableOpacity>
+          </View>}
         </View>
+
       </View>
     );
   }
@@ -215,7 +228,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: "#f5f5f5",
     right: 10,
-    bottom: '30%',
+    bottom: '50%',
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
@@ -258,7 +271,7 @@ const styles = StyleSheet.create({
   },
 
   bottomModalView:{
-    height: "25%",
+    height: "30%",
     padding: 10,
     backgroundColor: "white",
     borderRadius: 20,
@@ -326,9 +339,14 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
   },
+  bottomView:{
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
   addLocationButtonText:{
     color: "white",
-    fontSize: 20,
+    fontSize: 15,
     fontFamily: 'Helvetica Neue',
   }
 });

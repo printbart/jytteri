@@ -19,6 +19,38 @@ mysql = MySQL(app)
 bcrpyt = Bcrypt(app)
 CORS(app)
 
+#register register api
+@app.route('/api/register', methods=['POST'])
+def register():
+    cur = mysql.connection.cursor()
+    username = request.get_json()['username']
+
+    cur.execute("INSERT INTO users (username) VALUES ('" +
+    username + "')")
+
+    mysql.connection.commit()
+
+    output = {
+        "state": True,
+    }
+    return jsonify({"result": output})
+
+#login register api
+@app.route('/api/login', methods=['POST'])
+def login():
+    cur = mysql.connection.cursor()
+    username = request.get_json()['username']
+
+    cur.execute("SELECT user_id FROM users WHERE username = '" +
+    username + "'")
+
+    mysql.connection.commit()
+    data = cur.fetchall()
+    cur.close()
+    data = {'userID': data[0][0]}
+
+    return jsonify(data)
+
 #setting location api
 @app.route('/api/location', methods=['POST'])
 def location():
@@ -26,7 +58,7 @@ def location():
     latitude = request.get_json()['latitude']
     longitude = request.get_json()['longitude']
 
-    cur.execute("INSERT INTO pointer (latitude, longitude) VALUES ('"+
+    cur.execute("INSERT INTO pointer (latitude, longitude) VALUES ('" +
     str(latitude) + "','" + str(longitude) + "')")
 
     mysql.connection.commit()
