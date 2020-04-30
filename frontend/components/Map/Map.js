@@ -26,6 +26,11 @@ class Map extends Component {
     this.requestLocationPermission();
   }
 
+  //toggle search modal
+  toggleModal = (type) => {
+    this.setState({searchModalVisible: type});
+  }
+
   //check if permission is enabled
   requestLocationPermission = async() => {
     if(Platform.OS === "ios"){
@@ -40,9 +45,9 @@ class Map extends Component {
   locateCurrentPosition = () => {
     Geolocation.getCurrentPosition(
       position => {
-        console.log(JSON.stringify(position));
+        //console.log(JSON.stringify(position));
 
-        let myCurrentPosition = {
+        const myCurrentPosition = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
           latitudeDelta: 0.09,
@@ -66,14 +71,15 @@ class Map extends Component {
 
   //zoom in to the pressed location
   searchLocation = async(item) =>{
-    let r = {
+    this.setState({myMarker: null});
+    const r = {
       latitude: item.geometry.location.lat,
       longitude: item.geometry.location.lng,
       latitudeDelta: 0.09,
       longitudeDelta: 0.035,
     };
-    await this.setState({myMarker: r}); //set marker
     await this.map.animateToRegion(r, 2000); //zoom in for delta 2000ms
+    await this.setState({myMarker: r}); //set marker
   }
 
   //focus on the marker when pressed
@@ -85,11 +91,6 @@ class Map extends Component {
       longitudeDelta: 0.035,
     };
     this.map.animateToRegion(r, 1000);
-  }
-
-  //toggle search modal
-  toggleModal = (type) => {
-    this.setState({searchModalVisible: type});
   }
 
   render(){

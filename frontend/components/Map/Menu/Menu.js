@@ -38,7 +38,12 @@ const styles = StyleSheet.create({
         height: "30%",
         padding: 10,
         backgroundColor: "white",
-        borderRadius: 20,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        shadowColor: "#3C3C3D",
+        shadowRadius: 7.5,
+        shadowOpacity: 0.3,
+
       },
 });
 

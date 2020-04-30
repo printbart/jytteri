@@ -33,7 +33,8 @@ class SearchLocationInput extends Component {
             <View style = {styles.searchTextInputView}>
                 <TextInput
                     style = {styles.searchTextInput}
-                    placeholder="Where?"
+                    placeholder = "Where?"
+                    autoCorrect = {false}
                     onChangeText={destination => this.onChangeDestinationDebounced(destination)}/>
           </View>
         )
