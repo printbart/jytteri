@@ -20,7 +20,6 @@ class Map extends Component {
     this.state = {
       searchModalVisible: false,
       searchData: [],
-      markers: [],
     }
     this.onChangeDestinationDebounced = _.debounce(this.onChangeDestination, 1000);
   }
@@ -93,7 +92,7 @@ class Map extends Component {
       latitudeDelta: 0.09,
       longitudeDelta: 0.035,
     };
-    await this.setState({markers: [r]});
+    await this.setState({myMarker: r});
     await this.map.animateToRegion(r, 2000);
   }
 
@@ -108,6 +107,22 @@ class Map extends Component {
   }
 
   onPressSetLocation(){
+    var location = {
+      latitude: this.state.myMarker.latitude,
+      longitude: this.state.myMarker.longitude,
+    }
+    var request = new Request('http://localhost:5000/api/location', {
+      method: 'POST',
+      headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),
+      body: JSON.stringify(location)
+    });
+    fetch(request).then((response) => {
+      response.json().then((data) => {
+          this.setState({data: data.value})
+      });
+    }).catch(function(err){
+      console.log(err);
+    });
   }
 
   renderSearchLocation = ({item}) =>{
@@ -159,15 +174,12 @@ class Map extends Component {
         showsUserLocation={true}
         provider = {PROVIDER_GOOGLE}
         initialRegion = {this.state.initialPosition}>
-          {this.state.markers.map((value, index) => {
-            return(
+          
+          {this.state.myMarker ?
             <Marker
-            key = {index}
-            coordinate={{latitude: value.latitude, longitude: value.longitude}}
-            onPress={this.onPressMarker.bind(this, value)}>
-            </Marker>
-            )
-          })}
+            coordinate={{latitude: this.state.myMarker.latitude, longitude: this.state.myMarker.longitude}}
+            onPress={this.onPressMarker.bind(this, this.state.myMarker)}>
+            </Marker> : null }
         </MapView>
         <TouchableOpacity style = {styles.locateMeButtonView} onPress = {this.centerMap}>
           <MaterialIcons name="my-location" size={25} color="#3C3C3D"/>
@@ -177,7 +189,7 @@ class Map extends Component {
             <Text style = {styles.bottomHeaderText}>Where?</Text>
           </TouchableOpacity>
           <View style = {styles.noticeView}>
-            {!this.state.markers.length ?
+            {!this.state.myMarker ?
             <Text style = {styles.noticeText}>Find a location</Text>
            :
           <TouchableOpacity style = {styles.addLocationButtonView} onPress = {this.onPressSetLocation.bind(this)}>
