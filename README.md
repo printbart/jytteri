@@ -4,7 +4,9 @@ This Project is a react native application where users can see different events 
 
 ## Built With
 
-* [React Native](https://reactnative.dev/) - The mobile framework used
+* [React Native](https://reactnative.dev/) - mobile framework
+* [Flask](https://flask.palletsprojects.com/en/1.1.x/) - Backend framework
+* [MySQL](https://www.mysql.com/) - RDMS
 
 ## Authors
 

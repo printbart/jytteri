@@ -1,12 +1,17 @@
 CREATE TABLE Users (
-    user_id SERIAL NOT NULL,
+    userID SERIAL NOT NULL,
     username VARCHAR(16) NOT NULL UNIQUE,
-    PRIMARY KEY (user_id)
+    PRIMARY KEY (userID)
+);
+
+CREATE TABLE Attend (
+    userID INT NOT NULL,
+    eventID INT NOT NULL
 );
 
 CREATE TABLE Events (
     eventID SERIAL NOT NULL,
-    userID INT,
+    hostID INT,
     eventName VARCHAR(31),
     locationID TEXT,
     locationName VARCHAR(31),

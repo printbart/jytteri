@@ -5,7 +5,7 @@ import { StyleSheet, View, Text, TouchableOpacity, Platform, Alert } from 'react
 import { request, PERMISSIONS } from 'react-native-permissions';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 //components
 import SearchModal from './SearchModal/SearchModal';
@@ -85,18 +85,20 @@ class Map extends Component {
   }
 
   //zoom in to the pressed location
-  searchLocation = (item) =>{
+  searchLocation = (item) => {
     this.setState({myMarker: null});
+
     const location = {
-      locationID: item.place_id,
-      eventName: item.name,
-      locationName: item.name,
-      locationAddress: item.formatted_address,
-      latitude: item.geometry.location.lat,
-      longitude: item.geometry.location.lng,
+      locationID: item.place_id ? item.place_id : item.locationID,
+      eventName: item.name ? item.name : item.eventName,
+      locationName: item.name ? item.name : item.locationName,
+      locationAddress: item.formatted_address ? item.formatted_address : item.locationAddress,
+      latitude: item.geometry ? item.geometry.location.lat : item.latitude,
+      longitude: item.geometry ? item.geometry.location.lng : item.longitude,
       latitudeDelta: 0.09,
       longitudeDelta: 0.035,
     };
+
     var request = new Request('http://localhost:5000/api/searchLocationEvents', {
       method: 'POST',
       headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),
@@ -104,9 +106,9 @@ class Map extends Component {
     });
     fetch(request).then((response) => {
       response.json().then(async (data) => {
-        console.log(data);
+        location['events'] = data //store received data inside the location json
         await this.map.animateToRegion(location, 1000); //zoom in for delta 2000ms
-        await this.setState({myMarker: location}); //set marker
+        this.setState({myMarker: location}); //set marker
       });
     }).catch(function(err){
         console.log(err);
@@ -115,13 +117,7 @@ class Map extends Component {
 
   //focus on the marker when pressed
   onPressMarker(input){
-    const r = {
-      latitude: input.latitude,
-      longitude: input.longitude,
-      latitudeDelta: 0.09,
-      longitudeDelta: 0.035,
-    };
-    this.map.animateToRegion(r, 1000);
+    this.searchLocation(input);
   }
 
   //save location into database
@@ -161,16 +157,19 @@ class Map extends Component {
             <Marker
               coordinate={{latitude: this.state.myMarker.latitude, longitude: this.state.myMarker.longitude}}
               onPress={this.onPressMarker.bind(this, this.state.myMarker)}
-              pinColor = {"#000000"}>
+              pinColor = {"#000000"}
+              zIndex = {1}>
+                <MaterialCommunityIcons name="ethereum" size={25} color="#C23B22"/>
             </Marker>
           }
           {this.state.events.map((event) => { //all the events marker
             return(
               <Marker
-                key = {event.locationID}
+                key = {event.eventID}
                 coordinate={{longitude: event.longitude, latitude: event.latitude}}
                 onPress = {this.onPressMarker.bind(this, event)}
                 pinColor = {"#123456"}>
+                  <MaterialCommunityIcons name="balloon" size={50} color="#3C3C3D"/>
               </Marker>
             )
           })
