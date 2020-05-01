@@ -51,23 +51,54 @@ def login():
 
     return jsonify(data)
 
-#setting location api
-@app.route('/api/location', methods=['POST'])
-def location():
+#search all events in location api
+@app.route('/api/searchLocationEvents', methods=['POST'])
+def searchLocationEvents():
     cur = mysql.connection.cursor()
-    latitude = request.get_json()['latitude']
     longitude = request.get_json()['longitude']
+    latitude = request.get_json()['latitude']
 
-    cur.execute("INSERT INTO pointer (latitude, longitude) VALUES ('" +
-    str(latitude) + "','" + str(longitude) + "')")
+    cur.execute("SELECT * FROM events WHERE longitude = " +
+    str(longitude) + "AND LATITUDE = " + str(latitude))
 
     mysql.connection.commit()
 
-    result = {
-        "latitude" : latitude,
-        "longitude" : longitude
-    }
-    return jsonify({"result": result})
+    data = cur.fetchall()
+    if data:
+        data = {
+            "eventID": data[0][0],
+            "eventName": data[0][1],
+            "locationID": data[0][2],
+            "locationName": data[0][3],
+            "locationAddress": data[0][4],
+            "longitude": data[0][5],
+            "latitude": data[0][6],
+        }
+
+    return jsonify(data)
+
+#storeEvent api
+@app.route('/api/storeEvent', methods=['POST'])
+def storeEvent():
+    cur = mysql.connection.cursor()
+
+    #request data
+    eventName = request.get_json()['eventName']
+    locationID = request.get_json()['locationID']
+    locationName = request.get_json()['locationName']
+    locationAddress = request.get_json()['locationAddress']
+    longitude = request.get_json()['longitude']
+    latitude = request.get_json()['latitude']
+
+    #SQL
+    cur.execute("INSERT INTO events (eventName, locationID, locationName, locationAddress, longitude, latitude)" +
+    "VALUES ('" +
+    eventName + "','" + locationID + "','" +locationName + "','" + locationAddress + "','" +
+    str(longitude)+ "','" +str(latitude) + "')")
+
+    mysql.connection.commit()
+
+    return jsonify({"result": True})
 
 #main
 if __name__ == '__main__':

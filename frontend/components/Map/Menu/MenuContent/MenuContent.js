@@ -7,31 +7,14 @@ class MenuContent extends Component {
         this.state = {
         }
     }
-
-    //save location into database
-    onPressSetLocation(){
-        var location = {
-            latitude: this.props.myMarker.latitude,
-            longitude: this.props.myMarker.longitude,
-        }
-        var request = new Request('http://localhost:5000/api/location', {
-            method: 'POST',
-            headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),
-            body: JSON.stringify(location)
-        });
-        fetch(request).then((response) => {
-            response.json().then((data) => {
-                this.setState({data: data.value})
-            });
-        }).catch(function(err){
-            console.log(err);
-        });
+    storeLocation = () => {
+        this.props.storeLocation();
     }
 
     render(){
         return(
             <View style = {styles.bottomView}>
-                <TouchableOpacity style = {styles.addLocationButtonView} onPress = {this.onPressSetLocation.bind(this)}>
+                <TouchableOpacity style = {styles.addLocationButtonView} onPress = {this.storeLocation}>
                     <Text style = {styles.addLocationButtonText}>Host Event Here</Text>
                 </TouchableOpacity>
             </View>

@@ -24,6 +24,7 @@ class Map extends Component {
 
   componentDidMount(){
     this.requestLocationPermission();
+    this.setEventsOnMap();
   }
 
   //toggle search modal
@@ -34,7 +35,7 @@ class Map extends Component {
   //check if permission is enabled
   requestLocationPermission = async() => {
     if(Platform.OS === "ios"){
-    var response = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+      var response = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
       if(response === "granted"){
         this.locateCurrentPosition();
       }
@@ -46,7 +47,6 @@ class Map extends Component {
     Geolocation.getCurrentPosition(
       position => {
         //console.log(JSON.stringify(position));
-
         const myCurrentPosition = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -61,6 +61,11 @@ class Map extends Component {
     )
   }
 
+  //set all the event markers on the map
+  setEventsOnMap = () => {
+
+  }
+
   //center your current location
   centerMyLocation = () => {
     const{ latitude, longitude, latitudeDelta, longitudeDelta } = this.state.myCurrentPosition;
@@ -70,27 +75,61 @@ class Map extends Component {
   }
 
   //zoom in to the pressed location
-  searchLocation = async(item) =>{
+  searchLocation = (item) =>{
     this.setState({myMarker: null});
-    const r = {
+    const location = {
+      locationID: item.place_id,
+      eventName: item.name,
+      locationName: item.name,
+      locationAddress: item.formatted_address,
       latitude: item.geometry.location.lat,
       longitude: item.geometry.location.lng,
       latitudeDelta: 0.09,
       longitudeDelta: 0.035,
     };
-    await this.map.animateToRegion(r, 2000); //zoom in for delta 2000ms
-    await this.setState({myMarker: r}); //set marker
+    var request = new Request('http://localhost:5000/api/searchLocationEvents', {
+      method: 'POST',
+      headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),
+      body: JSON.stringify(location)
+    });
+    fetch(request).then((response) => {
+      response.json().then(async (data) => {
+        console.log(data);
+        await this.map.animateToRegion(location, 1000); //zoom in for delta 2000ms
+        await this.setState({myMarker: location}); //set marker
+      });
+    }).catch(function(err){
+        console.log(err);
+    });
   }
 
   //focus on the marker when pressed
   onPressMarker(input){
-    let r = {
+    const r = {
       latitude: input.latitude,
       longitude: input.longitude,
       latitudeDelta: 0.09,
       longitudeDelta: 0.035,
     };
     this.map.animateToRegion(r, 1000);
+  }
+
+  //save location into database
+  storeLocation = () =>{
+    const event = this.state.myMarker;
+    var request = new Request('http://localhost:5000/api/storeEvent', {
+      method: 'POST',
+      headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),
+      body: JSON.stringify(event)
+    });
+    fetch(request).then((response) => {
+      response.json().then((data) => {
+        //finished saving location
+        console.log(data);
+      });
+    }).catch(function(err){
+      console.log(err);
+    });
   }
 
   render(){
@@ -111,7 +150,8 @@ class Map extends Component {
           {this.state.myMarker &&
             <Marker
               coordinate={{latitude: this.state.myMarker.latitude, longitude: this.state.myMarker.longitude}}
-              onPress={this.onPressMarker.bind(this, this.state.myMarker)}>
+              onPress={this.onPressMarker.bind(this, this.state.myMarker)}
+              pinColor = {"#000000"}>
             </Marker>
           }
         </MapView>
@@ -119,7 +159,8 @@ class Map extends Component {
           centerMyLocation = {this.centerMyLocation}/>
         <Menu 
           toggleModal = {this.toggleModal}
-          myMarker = {this.state.myMarker}/>
+          myMarker = {this.state.myMarker}
+          storeLocation = {this.storeLocation}/>
       </View>
     );
   }

@@ -25,7 +25,8 @@ class Menu extends Component {
                     openModal = {this.openModal}/>
                 {this.props.myMarker ?
                     <MenuContent 
-                        myMarker = {this.props.myMarker}/> :
+                        myMarker = {this.props.myMarker}
+                        storeLocation = {this.props.storeLocation}/> :
                     <MenuNotice />
                 }
             </View>
