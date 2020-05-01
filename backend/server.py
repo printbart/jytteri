@@ -51,19 +51,51 @@ def login():
 
     return jsonify(data)
 
+#set all events api
+@app.route('/api/setEventsOnMap', methods=['GET'])
+def setEventsOnMap():
+    #input values
+    cur = mysql.connection.cursor()
+
+    #SQL
+    cur.execute("SELECT * FROM events")
+
+    mysql.connection.commit()
+
+    data = cur.fetchall() #data from the query
+
+    if data:
+        output = [] #new array to store our formatted data
+        for i in range(len(data)):
+            output.append({
+                "eventID": data[i][0],
+                "eventName": data[i][1],
+                "locationID": data[i][2],
+                "locationName": data[i][3],
+                "locationAddress": data[i][4],
+                "longitude": data[i][5],
+                "latitude": data[i][6],
+            })
+
+    return jsonify(output)
+
 #search all events in location api
 @app.route('/api/searchLocationEvents', methods=['POST'])
 def searchLocationEvents():
+    #input values
     cur = mysql.connection.cursor()
     longitude = request.get_json()['longitude']
     latitude = request.get_json()['latitude']
 
+    #SQL
     cur.execute("SELECT * FROM events WHERE longitude = " +
     str(longitude) + "AND LATITUDE = " + str(latitude))
 
     mysql.connection.commit()
 
     data = cur.fetchall()
+
+    #formatting data into json
     if data:
         data = {
             "eventID": data[0][0],

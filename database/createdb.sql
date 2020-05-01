@@ -6,6 +6,7 @@ CREATE TABLE Users (
 
 CREATE TABLE Events (
     eventID SERIAL NOT NULL,
+    userID INT,
     eventName VARCHAR(31),
     locationID TEXT,
     locationName VARCHAR(31),

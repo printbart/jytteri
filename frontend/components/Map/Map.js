@@ -18,7 +18,7 @@ class Map extends Component {
     super(props);
     this.state = {
       searchModalVisible: false,
-      searchData: [],
+      events: [],
     }
   }
 
@@ -63,7 +63,17 @@ class Map extends Component {
 
   //set all the event markers on the map
   setEventsOnMap = () => {
-
+    var request = new Request('http://localhost:5000/api/setEventsOnMap', {
+      method: 'GET',
+      headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' })
+    });
+    fetch(request).then((response) => {
+      response.json().then((data) => {
+        this.setState({events: data});
+      });
+    }).catch(function(err){
+      console.log(err);
+    })
   }
 
   //center your current location
@@ -116,7 +126,7 @@ class Map extends Component {
 
   //save location into database
   storeLocation = () =>{
-    const event = this.state.myMarker;
+    const event = this.state.myMarker; //user searched location position
     var request = new Request('http://localhost:5000/api/storeEvent', {
       method: 'POST',
       headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),
@@ -147,12 +157,23 @@ class Map extends Component {
           provider = {PROVIDER_GOOGLE}
           initialRegion = {this.state.myCurrentPosition}>
 
-          {this.state.myMarker &&
+          {this.state.myMarker && //user searched marker
             <Marker
               coordinate={{latitude: this.state.myMarker.latitude, longitude: this.state.myMarker.longitude}}
               onPress={this.onPressMarker.bind(this, this.state.myMarker)}
               pinColor = {"#000000"}>
             </Marker>
+          }
+          {this.state.events.map((event) => { //all the events marker
+            return(
+              <Marker
+                key = {event.locationID}
+                coordinate={{longitude: event.longitude, latitude: event.latitude}}
+                onPress = {this.onPressMarker.bind(this, event)}
+                pinColor = {"#123456"}>
+              </Marker>
+            )
+          })
           }
         </MapView>
         <LocateMeButton 
