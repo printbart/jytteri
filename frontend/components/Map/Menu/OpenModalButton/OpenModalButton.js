@@ -8,13 +8,13 @@ class OpenModalButton extends Component {
         }
     }
 
-    onClickOpenModal = () =>{
-        this.props.openModal();
+    onClickOpenSearchModal = () =>{
+        this.props.openSearchModal();
     }
 
     render(){
         return(
-            <TouchableOpacity style = {styles.bottomHeaderView} onPress={this.onClickOpenModal}>
+            <TouchableOpacity style = {styles.bottomHeaderView} onPress={this.onClickOpenSearchModal}>
                 <Text style = {styles.bottomHeaderText}>Where?</Text>
             </TouchableOpacity>
         )

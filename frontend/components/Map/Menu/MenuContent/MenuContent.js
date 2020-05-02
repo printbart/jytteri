@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, View, Text, Alert, TouchableOpacity, FlatList } from 'react-native';
 
 //packages
 
@@ -11,18 +11,37 @@ class MenuContent extends Component {
         this.state = {
         }
     }
-    storeLocation = () => {
+
+    //open event modal
+    onPressOpenEventModal = (item) => {
+        this.props.openEventModal(item);
+    }
+
+    //confirmation alert
+    onPressHostEventAlert = () =>{
+        Alert.alert("Confirm to host?","Your previous hosted events will get deleted",
+          [{
+            text: "Cancel",
+            style: "cancel"
+          },
+          { text: "OK", onPress: () => this.onPressHostEvent() }],
+        );
+    }
+
+    //if host button clicked
+    onPressHostEvent(){
         this.props.storeLocation();
     }
+
     renderEvents = ({item}) => {
         return(
-        <View style = {styles.eventView}>
+        <TouchableOpacity style = {styles.eventView} onPress = {this.onPressOpenEventModal.bind(this, item)}>
             <View style = {styles.eventTitleView}>
                 <View>
-                    <Text style = {styles.eventTitleText}>{item.eventName}</Text>
+                    <Text style = {styles.eventTitleText} numberOfLines={1}>{item.eventName}</Text>
                 </View>
                 <View>
-                    <Text style = {styles.eventAddressText}>{item.locationAddress}</Text>
+                    <Text style = {styles.eventAddressText} numberOfLines={2}>{item.locationAddress}</Text>
                 </View>
             </View>
             <View style = {styles.eventPopulationView}>
@@ -34,9 +53,9 @@ class MenuContent extends Component {
                 </View>
             </View>
             <TouchableOpacity style = {styles.eventJoinButtonView}>
-                <Text style= {styles.eventJoinButtonText}> JOIN</Text>
+                <Text style= {styles.eventJoinButtonText}> JOIN </Text>
             </TouchableOpacity>
-        </View>)
+        </TouchableOpacity>)
     }
 
     render(){
@@ -46,8 +65,8 @@ class MenuContent extends Component {
                     data = {this.props.myMarker.events}
                     renderItem = {this.renderEvents}
                     keyExtractor = {(item)=>item.eventID.toString()}/>
-                <TouchableOpacity style = {styles.addLocationButtonView} onPress = {this.storeLocation}>
-                    <Text style = {styles.addLocationButtonText}>Host Here</Text>
+                <TouchableOpacity style = {styles.addLocationButtonView} onPress = {this.onPressHostEventAlert}>
+                    <Text style = {styles.addLocationButtonText}>Host</Text>
                 </TouchableOpacity>
             </View>
         )

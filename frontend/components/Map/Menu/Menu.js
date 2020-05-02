@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import OpenModalButton from './OpenModalButton/OpenModalButton';
 
 //components
@@ -14,19 +14,25 @@ class Menu extends Component {
     }
 
     //open search modal
-    openModal = () => {
-        this.props.toggleModal(true);
+    openSearchModal = () => {
+        this.props.toggleSearchModal(true);
+    }
+
+    //open event modal
+    openEventModal = (item) => {
+        this.props.toggleEventModal(true, item); //open event modual and set event item
     }
 
     render(){
         return(
             <View style={styles.bottomModalView}>
                 <OpenModalButton 
-                    openModal = {this.openModal}/>
+                    openSearchModal = {this.openSearchModal}/>
                 {this.props.myMarker ?
                     <MenuContent 
                         myMarker = {this.props.myMarker}
-                        storeLocation = {this.props.storeLocation}/> :
+                        storeLocation = {this.props.storeLocation}
+                        openEventModal = {this.openEventModal}/> :
                     <MenuNotice />
                 }
             </View>

@@ -5,7 +5,7 @@ import { StyleSheet, View, TextInput } from 'react-native';
 import _ from "lodash";
 
 //api key
-import {googleMapSearchApiKey} from "../../../../apiKey";
+import {googleMapSearchApiKey} from "../../../../../apiKey";
 
 class SearchLocationInput extends Component {
     constructor(props){

@@ -10,8 +10,8 @@ CREATE TABLE Attend (
 );
 
 CREATE TABLE Events (
-    eventID SERIAL NOT NULL,
-    hostID INT,
+    eventID SERIAL NOT NULL UNIQUE,
+    hostID INT NOT NULL UNIQUE,
     eventName VARCHAR(31),
     locationID TEXT,
     locationName VARCHAR(31),

@@ -64,19 +64,20 @@ def setEventsOnMap():
 
     data = cur.fetchall() #data from the query
 
+    output = [] #new array to store our formatted data
     if data:
-        output = [] #new array to store our formatted data
         for i in range(len(data)):
             output.append({
                 "eventID": data[i][0],
-                "eventName": data[i][1],
-                "locationID": data[i][2],
-                "locationName": data[i][3],
-                "locationAddress": data[i][4],
-                "longitude": data[i][5],
-                "latitude": data[i][6],
+                "hostID": data[i][1],
+                "eventName": data[i][2],
+                "locationID": data[i][3],
+                "locationName": data[i][4],
+                "locationAddress": data[i][5],
+                "longitude": data[i][6],
+                "latitude": data[i][7],
             })
-        return jsonify(output)
+    return jsonify(output)
 
 #search all events in location api
 @app.route('/api/searchLocationEvents', methods=['POST'])
@@ -95,19 +96,20 @@ def searchLocationEvents():
     data = cur.fetchall()
 
     #formatting data into json
+    output = [] #new array to store our formatted data
     if data:
-        output = [] #new array to store our formatted data
         for i in range(len(data)):
             output.append({
                 "eventID": data[i][0],
-                "eventName": data[i][1],
-                "locationID": data[i][2],
-                "locationName": data[i][3],
-                "locationAddress": data[i][4],
-                "longitude": data[i][5],
-                "latitude": data[i][6],
+                "hostID": data[i][1],
+                "eventName": data[i][2],
+                "locationID": data[i][3],
+                "locationName": data[i][4],
+                "locationAddress": data[i][5],
+                "longitude": data[i][6],
+                "latitude": data[i][7],
             })
-        return jsonify(output)
+    return jsonify(output)
 
 #storeEvent api
 @app.route('/api/storeEvent', methods=['POST'])
@@ -115,6 +117,7 @@ def storeEvent():
     cur = mysql.connection.cursor()
 
     #request data
+    hostID = request.get_json()['hostID']
     eventName = request.get_json()['eventName']
     locationID = request.get_json()['locationID']
     locationName = request.get_json()['locationName']
@@ -123,14 +126,34 @@ def storeEvent():
     latitude = request.get_json()['latitude']
 
     #SQL
-    cur.execute("INSERT INTO events (eventName, locationID, locationName, locationAddress, longitude, latitude)" +
-    "VALUES ('" +
-    eventName + "','" + locationID + "','" +locationName + "','" + locationAddress + "','" +
-    str(longitude)+ "','" +str(latitude) + "')")
+    #query 1) update event location if data exist. else add data
+    cur.execute(
+    "REPLACE INTO events SET hostID = " +
+    str(hostID) + ",eventName = '" + eventName + "', locationID = '" + locationID + "', locationName = '"+
+    locationName + "', locationAddress = '" + locationAddress + "', longitude = '" + str(longitude) + "', latitude = '" + str(latitude) + "'")
+
+    #query 2) grab all events happening in my location
+    cur.execute("SELECT * FROM events WHERE longitude = " +
+    str(longitude) + "AND LATITUDE = " + str(latitude))
 
     mysql.connection.commit()
+    data = cur.fetchall()
 
-    return jsonify({"result": True})
+    #formatting data into json
+    output = [] #new array to store our formatted data
+    if data:
+        for i in range(len(data)):
+            output.append({
+                "eventID": data[i][0],
+                "hostID": data[i][1],
+                "eventName": data[i][2],
+                "locationID": data[i][3],
+                "locationName": data[i][4],
+                "locationAddress": data[i][5],
+                "longitude": data[i][6],
+                "latitude": data[i][7],
+            })
+    return jsonify(output)
 
 #main
 if __name__ == '__main__':

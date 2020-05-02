@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Platform, Alert } from 'react-native';
+import { StyleSheet, View, Platform, Alert } from 'react-native';
 
 //libaries
 import { request, PERMISSIONS } from 'react-native-permissions';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AsyncStorage from '@react-native-community/async-storage';
 
 //components
-import SearchModal from './SearchModal/SearchModal';
+import SearchModal from './Modal/SearchModal/SearchModal';
 import LocateMeButton from './LocateMeButton/LocateMeButton';
 import Menu from './Menu/Menu';
+import EventModal from './Modal/EventModal/EventModal';
 
 
 class Map extends Component {
@@ -18,6 +20,7 @@ class Map extends Component {
     super(props);
     this.state = {
       searchModalVisible: false,
+      eventModalVisible: false,
       events: [],
     }
   }
@@ -28,8 +31,18 @@ class Map extends Component {
   }
 
   //toggle search modal
-  toggleModal = (type) => {
+  toggleSearchModal = (type) => {
     this.setState({searchModalVisible: type});
+  }
+
+  //toggle event modal
+  toggleEventModal = (type, item) => {
+    this.setState({eventModalVisible: type, currentEventItem: item});
+  }
+
+  //focus on the marker when pressed
+  onPressMarker(input){
+    this.searchLocation(input);
   }
 
   //check if permission is enabled
@@ -85,12 +98,14 @@ class Map extends Component {
   }
 
   //zoom in to the pressed location
-  searchLocation = (item) => {
+  searchLocation = async(item) => {
     this.setState({myMarker: null});
 
     const location = {
+      // search modal data or onPressMarker data
       locationID: item.place_id ? item.place_id : item.locationID,
-      eventName: item.name ? item.name : item.eventName,
+      hostID: await AsyncStorage.getItem('userID'),
+      eventName: "Getting lit over here!",
       locationName: item.name ? item.name : item.locationName,
       locationAddress: item.formatted_address ? item.formatted_address : item.locationAddress,
       latitude: item.geometry ? item.geometry.location.lat : item.latitude,
@@ -111,13 +126,8 @@ class Map extends Component {
         this.setState({myMarker: location}); //set marker
       });
     }).catch(function(err){
-        console.log(err);
+      console.log(err);
     });
-  }
-
-  //focus on the marker when pressed
-  onPressMarker(input){
-    this.searchLocation(input);
   }
 
   //save location into database
@@ -130,8 +140,17 @@ class Map extends Component {
     });
     fetch(request).then((response) => {
       response.json().then((data) => {
-        //finished saving location
-        console.log(data);
+        const myMarker =  JSON.parse(JSON.stringify(this.state.myMarker)); //my current marker data
+        const events = JSON.parse(JSON.stringify(this.state.events)); //all the events
+        myMarker['events'] = data; // store all the data inside 
+        for(var i in events){ // check all the events to see if user has other events hosted
+          if(Number(events[i].hostID) === Number(myMarker.hostID)){
+            events.splice(i, 1); //delete event user hosted
+          }
+        }
+        events.push(myMarker);
+
+        this.setState({myMarker: myMarker, events: events});
       });
     }).catch(function(err){
       console.log(err);
@@ -144,8 +163,12 @@ class Map extends Component {
         <SearchModal
           modalState = {this.state.searchModalVisible}
           myCurrentPosition = {this.state.myCurrentPosition}
-          toggleModal = {this.toggleModal}
+          toggleSearchModal = {this.toggleSearchModal}
           searchLocation = {this.searchLocation}/>
+        <EventModal
+          eventModalState = {this.state.eventModalVisible}
+          currentEventItem = {this.state.currentEventItem}
+          toggleEventModal = {this.toggleEventModal}/>
         <MapView 
           style = {styles.mapView}
           ref={(map) => {this.map = map}}
@@ -172,15 +195,15 @@ class Map extends Component {
                   <MaterialCommunityIcons name="balloon" size={50} color="#3C3C3D"/>
               </Marker>
             )
-          })
-          }
+          })}
         </MapView>
         <LocateMeButton 
           centerMyLocation = {this.centerMyLocation}/>
         <Menu 
-          toggleModal = {this.toggleModal}
+          toggleSearchModal = {this.toggleSearchModal}
           myMarker = {this.state.myMarker}
-          storeLocation = {this.storeLocation}/>
+          storeLocation = {this.storeLocation}
+          toggleEventModal = {this.toggleEventModal}/>
       </View>
     );
   }

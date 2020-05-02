@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, TouchableOpacity, TextInput, Modal } from 'react-native';
+import { StyleSheet, View, Modal } from 'react-native';
 
 //components
-import CloseModalButton from './CloseModalButton/CloseModalButton';
+import CloseModalButton from '../ModalComponents/CloseModalButton/CloseModalButton';
 import SearchLocationInput from './SearchLocationInput/SearchLocationInput';
 import SearchLocationList from './SearchLocationList/SearchLocationList';
 
@@ -16,7 +16,7 @@ class SearchModal extends Component {
 
   //close search modal
   closeModal = () => {
-    this.props.toggleModal(false);
+    this.props.toggleSearchModal(false);
     this.setSearchLocationData([]);
   }
 
@@ -27,7 +27,7 @@ class SearchModal extends Component {
 
   //zoom in to the location you clicked
   searchLocation = (item) => {
-    this.props.toggleModal(false); //close search modal
+    this.props.toggleSearchModal(false); //close search modal
     this.props.searchLocation(item); //zoom in
   }
 
@@ -37,7 +37,7 @@ class SearchModal extends Component {
         visible={this.props.modalState}
         animationType="slide">
         <View style={styles.modalView}>
-          <View style = {styles.modalTopView}>
+          <View style = {styles.modalHeaderView}>
             <CloseModalButton 
               closeModal={this.closeModal}/>
             <SearchLocationInput
@@ -53,20 +53,20 @@ class SearchModal extends Component {
   }
 }
 const styles = StyleSheet.create({
-    modalView:{
-        flex: 1,
-        paddingTop: 30,
-      },
-      modalTopView:{
-        margin: 10,
-        height: 50,
-        flexDirection: 'row',
-      },
-      cancelText:{
-        fontSize: 20,
-        fontWeight: "200",
-        padding: 5,
-      },
+  modalView:{
+    flex: 1,
+    paddingTop: 30,
+  },
+  modalHeaderView:{
+    margin: 10,
+    height: 50,
+    flexDirection: 'row',
+  },
+  cancelText:{
+    fontSize: 20,
+    fontWeight: "200",
+    padding: 5,
+  },
 });
 
 export default SearchModal;

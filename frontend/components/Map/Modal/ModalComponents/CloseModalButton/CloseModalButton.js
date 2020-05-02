@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-class Home extends Component {
+class CloseModalButton extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -29,4 +29,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Home;
+export default CloseModalButton;
