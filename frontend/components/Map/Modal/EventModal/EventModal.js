@@ -12,6 +12,16 @@ class EventModal extends Component {
         }
     }
 
+    //set title of the event
+    setTitle = () => {
+        this.setState({title: this.props.currentEventItem.eventName});
+    }
+
+    //clear title input
+    clearTitle = () => {
+        this.setState({title: ""});
+    }
+
     //close search modal
     closeEventModal = () => {
         this.props.toggleEventModal(false);
@@ -19,7 +29,10 @@ class EventModal extends Component {
 
     //save event
     saveEvent = () => {
-        
+        this.closeEventModal(); //close event modal
+        const changedEventItem = JSON.parse(JSON.stringify(this.props.currentEventItem)); //make event data mutable
+        changedEventItem.eventName = this.state.title; //set changed title
+        this.props.editEventInfo(changedEventItem)
     }
 
     render(){
@@ -41,7 +54,12 @@ class EventModal extends Component {
                         </TouchableOpacity>
                     </View>
                     <EventInfo
-                        eventItem = {this.props.currentEventItem}/>
+                        title = {this.state.title}
+                        eventItem = {this.props.currentEventItem}
+                        onChangeTitle={(title) => this.setState({title: title})}
+                        setTitle = {this.setTitle}
+                        clearTitle = {this.clearTitle}
+                        />
                 </View>
             </Modal>
         )

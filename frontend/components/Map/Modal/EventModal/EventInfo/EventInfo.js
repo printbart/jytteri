@@ -13,16 +13,9 @@ class EventInfo extends Component {
         }
     }
 
+    //set title when event modal is opened
     componentDidMount(){
-        this.setTitle();
-    }
-
-    setTitle = () => {
-        this.setState({title: this.props.eventItem.eventName});
-    }
-
-    clearTitle = () => {
-        this.setState({title: null});
+        this.props.setTitle();
     }
 
     render(){
@@ -36,10 +29,10 @@ class EventInfo extends Component {
                         <TextInput
                         placeholder="enter title"
                         style={styles.input}
-                        value = {this.state.title}
-                        onChangeText={(title) => this.setState({title: title})}
+                        value = {this.props.title}
+                        onChangeText={(title) => this.props.onChangeTitle(title)}
                         maxLength={32}/>
-                        <TouchableOpacity style = {styles.clearButtonView} onPress = {this.clearTitle}>
+                        <TouchableOpacity style = {styles.clearButtonView} onPress = {this.props.clearTitle}>
                             <MaterialCommunityIcons name = "close-circle" size = {20} color = "lightgrey"/>
                         </TouchableOpacity>
                     </View>

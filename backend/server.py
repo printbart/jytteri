@@ -155,6 +155,21 @@ def storeEvent():
             })
     return jsonify(output)
 
+#event event information location api
+@app.route('/api/editEventInfo', methods=['POST'])
+def editEventInfo():
+    #input values
+    cur = mysql.connection.cursor()
+    eventID = request.get_json()['eventID']
+    eventName = request.get_json()['eventName']
+
+    #SQL
+    cur.execute("UPDATE events SET eventName = '" + eventName + "' WHERE eventID = '" + str(eventID) + "'")
+
+    mysql.connection.commit()
+
+    return jsonify({"result": True})
+
 #main
 if __name__ == '__main__':
     app.run(debug=True)

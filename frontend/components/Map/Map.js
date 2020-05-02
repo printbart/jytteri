@@ -45,6 +45,14 @@ class Map extends Component {
     this.searchLocation(input);
   }
 
+  //center your current location
+  centerMyLocation = () => {
+    const{ latitude, longitude, latitudeDelta, longitudeDelta } = this.state.myCurrentPosition;
+    this.map.animateToRegion({
+      latitude, longitude, latitudeDelta, longitudeDelta
+    });
+  }
+
   //check if permission is enabled
   requestLocationPermission = async() => {
     if(Platform.OS === "ios"){
@@ -89,11 +97,28 @@ class Map extends Component {
     })
   }
 
-  //center your current location
-  centerMyLocation = () => {
-    const{ latitude, longitude, latitudeDelta, longitudeDelta } = this.state.myCurrentPosition;
-    this.map.animateToRegion({
-      latitude, longitude, latitudeDelta, longitudeDelta
+  //edit event info
+  editEventInfo = (item) => {
+    const event = item; //user searched location position
+    var request = new Request('http://localhost:5000/api/editEventInfo', {
+      method: 'POST',
+      headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),
+      body: JSON.stringify(event)
+    });
+    fetch(request).then((response) => {
+      response.json().then((data) => {
+        if(data.result){ //if data is successfully retrieved
+          const myMarker =  JSON.parse(JSON.stringify(this.state.myMarker)); //my current marker
+          for(const i in myMarker.events){ //update all the events with the same eventID
+            if(myMarker.events[i].eventID === event.eventID){
+              myMarker.events[i] = event;
+            }
+          }
+          this.setState({myMarker : myMarker});
+        }
+      });
+    }).catch(function(err){
+      console.log(err);
     });
   }
 
@@ -131,7 +156,7 @@ class Map extends Component {
   }
 
   //save location into database
-  storeLocation = () =>{
+  storeLocation = () => {
     const event = this.state.myMarker; //user searched location position
     var request = new Request('http://localhost:5000/api/storeEvent', {
       method: 'POST',
@@ -168,7 +193,9 @@ class Map extends Component {
         <EventModal
           eventModalState = {this.state.eventModalVisible}
           currentEventItem = {this.state.currentEventItem}
-          toggleEventModal = {this.toggleEventModal}/>
+          toggleEventModal = {this.toggleEventModal}
+          editEventInfo = {this.editEventInfo}
+          />
         <MapView 
           style = {styles.mapView}
           ref={(map) => {this.map = map}}
