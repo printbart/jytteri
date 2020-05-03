@@ -155,6 +155,26 @@ class Map extends Component {
     });
   }
 
+  //join the selected event
+  joinEvent = async (item) => {
+    const info = {
+      userID: await AsyncStorage.getItem('userID'), //userID
+      eventID: item.eventID //eventID
+    };
+    var request = new Request('http://localhost:5000/api/joinEvent', {
+      method: 'POST',
+      headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),
+      body: JSON.stringify(info)
+    });
+    fetch(request).then((response) => {
+      response.json().then((data) => {
+        console.log(data);
+      });
+    }).catch(function(err){
+      console.log(err);
+    });
+  }
+
   //save location into database
   storeLocation = () => {
     const event = this.state.myMarker; //user searched location position
@@ -230,7 +250,8 @@ class Map extends Component {
           toggleSearchModal = {this.toggleSearchModal}
           myMarker = {this.state.myMarker}
           storeLocation = {this.storeLocation}
-          toggleEventModal = {this.toggleEventModal}/>
+          toggleEventModal = {this.toggleEventModal}
+          joinEvent = {this.joinEvent}/>
       </View>
     );
   }

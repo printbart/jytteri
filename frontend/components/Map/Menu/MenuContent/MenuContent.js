@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Text, Alert, TouchableOpacity, FlatList } from 'react-native';
 
 //packages
-
+import AsyncStorage from '@react-native-community/async-storage';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 class MenuContent extends Component {
@@ -10,6 +10,9 @@ class MenuContent extends Component {
         super(props);
         this.state = {
         }
+    }
+    async componentDidMount (){
+        this.setState({userID: await AsyncStorage.getItem('userID')});
     }
 
     //open event modal
@@ -33,6 +36,11 @@ class MenuContent extends Component {
         this.props.storeLocation();
     }
 
+    //join 
+    onPressJoin(item){
+        this.props.joinEvent(item)
+    }
+
     renderEvents = ({item}) => {
         return(
         <TouchableOpacity style = {styles.eventView} onPress = {this.onPressOpenEventModal.bind(this, item)}>
@@ -52,9 +60,10 @@ class MenuContent extends Component {
                     <Text style = {styles.eventPopulationCountText}>5</Text>
                 </View>
             </View>
-            <TouchableOpacity style = {styles.eventJoinButtonView}>
+            {Number(this.state.userID) !== item.hostID &&
+            <TouchableOpacity style = {styles.eventJoinButtonView} onPress = {this.onPressJoin.bind(this, item)}>
                 <Text style= {styles.eventJoinButtonText}> JOIN </Text>
-            </TouchableOpacity>
+            </TouchableOpacity>}
         </TouchableOpacity>)
     }
 

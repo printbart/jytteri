@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+
+//packages
+import AsyncStorage from '@react-native-community/async-storage';
 
 class Home extends Component {
     constructor(props){
@@ -7,13 +10,25 @@ class Home extends Component {
         this.state = {
         }
     }
+
+    //logout
+    onPressLogout = async() => {
+        try{
+            await AsyncStorage.clear(); //clear my id in asyncstorage
+            this.props.navigation.navigate("authentication"); //navigate to authenitcation page
+          }
+          catch (err){
+            console.log(err);
+          }
+    }
+
     render(){
         return(
             <View style ={styles.container}>
                 <Text style = {styles.title}>Home</Text>
-                <View style = {styles.logoutBtn}>
+                <TouchableOpacity style = {styles.logoutBtn} onPress = {this.onPressLogout}>
                     <Text>Logout</Text>
-                </View>
+                </TouchableOpacity>
             </View>
         )
     }

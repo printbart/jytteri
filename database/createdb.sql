@@ -1,5 +1,5 @@
 CREATE TABLE Users (
-    userID SERIAL NOT NULL,
+    userID SERIAL NOT NULL UNIQUE,
     username VARCHAR(16) NOT NULL UNIQUE,
     PRIMARY KEY (userID)
 );

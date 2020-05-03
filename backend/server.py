@@ -111,6 +111,21 @@ def searchLocationEvents():
             })
     return jsonify(output)
 
+#join event of the user
+@app.route('/api/joinEvent', methods=['POST'])
+def joinEvent():
+    #input values
+    cur = mysql.connection.cursor()
+    userID = request.get_json()['userID']
+    eventID = request.get_json()['eventID']
+
+    #SQL
+    cur.execute("INSERT INTO attend(userID, eventID) VALUES (" + str(userID) + "," +str(eventID) + ")")
+
+    mysql.connection.commit()
+
+    return jsonify({"output": True})
+
 #storeEvent api
 @app.route('/api/storeEvent', methods=['POST'])
 def storeEvent():

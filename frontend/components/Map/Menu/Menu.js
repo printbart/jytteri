@@ -32,7 +32,8 @@ class Menu extends Component {
                     <MenuContent 
                         myMarker = {this.props.myMarker}
                         storeLocation = {this.props.storeLocation}
-                        openEventModal = {this.openEventModal}/> :
+                        openEventModal = {this.openEventModal}
+                        joinEvent = {this.props.joinEvent}/> :
                     <MenuNotice />
                 }
             </View>

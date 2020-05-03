@@ -25,8 +25,8 @@ const AuthenticationStack = createStackNavigator();
 const BottomStackScreen = () => {
     return(
         <BottomTab.Navigator>
-            <BottomTab.Screen name="Map" component={Map} />
-            <BottomTab.Screen name="Home" component={Home} />
+            <BottomTab.Screen name="map" component={Map} />
+            <BottomTab.Screen name="home" component={Home} />
         </BottomTab.Navigator>
     )
 }
