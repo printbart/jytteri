@@ -127,6 +127,31 @@ class Map extends Component {
     });
   }
 
+  leaveEvent = async(item) => {
+    const info = {
+      userID: await AsyncStorage.getItem('userID'), //userID
+      eventID: this.state.currentEventItem.eventID //eventID
+    };
+    const request = new Request('http://localhost:5000/api/leaveEvent', {
+      method: 'POST',
+      headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),
+      body: JSON.stringify(info)
+    });
+    fetch(request).then((response) => {
+      response.json().then((data) => {
+        if(data.result){
+          this.searchLocation(item); //refresh
+        }
+      });
+    }).catch(function(err){
+      console.log(err);
+    });
+  }
+
+  deleteEvent = () => {
+    console.log("delete event");
+  }
+
   //zoom in to the pressed location
   searchLocation = async(item) => {
     this.setState({myMarker: null});
@@ -173,7 +198,9 @@ class Map extends Component {
     });
     fetch(request).then((response) => {
       response.json().then((data) => {
-        console.log(data); //implement column in SQL in the future
+        if(data.result){
+          this.searchLocation(item); //refresh
+        }
       });
     }).catch(function(err){
       console.log(err);
@@ -241,6 +268,8 @@ class Map extends Component {
           currentEventItem = {this.state.currentEventItem}
           toggleEventModal = {this.toggleEventModal}
           editEventInfo = {this.editEventInfo}
+          leaveEvent = {this.leaveEvent}
+          deleteEvent = {this.deleteEvent}
           />
         <MapView 
           style = {styles.mapView}

@@ -84,14 +84,19 @@ def setEventsOnMap():
 def searchLocationEvents():
     #input values
     cur = mysql.connection.cursor()
+    userID = request.get_json()['hostID'] #hostID = userID since userID will be host if user decides to host
     longitude = request.get_json()['longitude']
     latitude = request.get_json()['latitude']
 
     #SQL
-    cur.execute("SELECT e.*, u.username, COUNT(a.userID) AS userJoinCount FROM Events e " +
+    cur.execute("SELECT DISTINCT e.*, u.username, COUNT(a.userID) AS guestCount, " +
+    "(CASE WHEN EXISTS(SELECT 1 FROM Attend a INNER JOIN Events e ON a.eventID = e.eventID "
+    "WHERE e.longitude = "+str(longitude)+ " AND e.latitude = " + str(latitude) + " AND userID = "+ str(userID) +
+    ") THEN 1 ELSE 0 END) AS status "
+    "FROM Events e " +
     "LEFT JOIN Attend a ON e.eventID = a.eventID " +
     "INNER JOIN Users u ON u.userID = e.hostID " +
-    "WHERE e.longitude = " + str(longitude) + "AND e.LATITUDE = " + str(latitude) +
+    "WHERE e.longitude = " + str(longitude) + "AND e.latitude = " + str(latitude) +
     "GROUP BY e.eventID")
 
     mysql.connection.commit()
@@ -112,7 +117,8 @@ def searchLocationEvents():
                 "longitude": data[i][6],
                 "latitude": data[i][7],
                 "hostName": data[i][8],
-                "userJoinCount": data[i][9]
+                "guestCount": data[i][9],
+                "status": data[i][10]
             })
     return jsonify(output)
 
@@ -129,7 +135,7 @@ def joinEvent():
 
     mysql.connection.commit()
 
-    return jsonify({"output": True})
+    return jsonify({"result": True})
 
 #storeEvent api
 @app.route('/api/storeEvent', methods=['POST'])
@@ -215,6 +221,22 @@ def getEventUsers():
                 "username": data[i][1],
             })
     return jsonify(output)
+
+#join event of the user
+@app.route('/api/leaveEvent', methods=['POST'])
+def leaveEvent():
+    #input values
+    cur = mysql.connection.cursor()
+    userID = request.get_json()['userID']
+    eventID = request.get_json()['eventID']
+
+    #SQL
+    cur.execute("DELETE FROM Attend WHERE userID = " + str(userID) + " AND eventID = " + str(eventID))
+
+    mysql.connection.commit()
+
+    return jsonify({"result": True})
+
 
 #main
 if __name__ == '__main__':

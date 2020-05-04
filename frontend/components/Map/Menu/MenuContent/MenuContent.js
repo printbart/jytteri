@@ -57,13 +57,13 @@ class MenuContent extends Component {
                     <FontAwesome name="user-o" size={20} color="grey"/>
                 </View>
                 <View style = {styles.eventPopulationCountView}>
-                    <Text style = {styles.eventPopulationCountText}>{item.userJoinCount ? item.userJoinCount : 0}</Text>
+                    <Text style = {styles.eventPopulationCountText}>{item.guestCount ? item.guestCount : 0}</Text>
                 </View>
             </View>
-            {Number(this.state.userID) !== item.hostID &&
+            {(Number(this.state.userID) !== item.hostID && item.status === 0) ?
             <TouchableOpacity style = {styles.eventJoinButtonView} onPress = {this.onPressJoin.bind(this, item)}>
                 <Text style= {styles.eventJoinButtonText}> JOIN </Text>
-            </TouchableOpacity>}
+            </TouchableOpacity> :  <View style= {styles.eventJoinButtonView}></View>}
         </TouchableOpacity>)
     }
 
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
         color: "#3C3C3D",
     },
     eventPopulationView:{
-        flex: 1,
+        width: 50,
         flexDirection: "row",
         alignItems: 'center',
     },
@@ -141,8 +141,9 @@ const styles = StyleSheet.create({
         color: "#3C3C3D",
     },
     eventJoinButtonView:{
+        width: 75,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     eventJoinButtonText:{
         fontSize: 20,

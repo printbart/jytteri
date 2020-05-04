@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, Modal, TouchableOpacity } from 'react-native';
 
+//packages
+import AsyncStorage from '@react-native-community/async-storage';
+
 //components
 import CloseModalButton from '../ModalComponents/CloseModalButton/CloseModalButton';
 import EventInfo from './EventInfo/EventInfo';
@@ -35,6 +38,17 @@ class EventModal extends Component {
         this.props.editEventInfo(changedEventItem)
     }
 
+    //leave event
+    leaveEventType = async () => {
+        if(this.props.currentEventItem.hostID !== Number(await AsyncStorage.getItem('userID'))){ //if user is a guest
+            await this.props.leaveEvent(this.props.currentEventItem); //leave event
+        }
+        else{ //if user is a host
+            await this.props.deleteEvent(); //delete event
+        }
+        await this.closeEventModal(); //close event modal
+    }
+
     render(){
         return(
             <Modal
@@ -59,6 +73,7 @@ class EventModal extends Component {
                         onChangeTitle={(title) => this.setState({title: title})}
                         setTitle = {this.setTitle}
                         clearTitle = {this.clearTitle}
+                        leaveEvent = {this.leaveEventType}
                         />
                 </View>
             </Modal>
