@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
 
 //packages
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -18,10 +18,20 @@ class EventInfo extends Component {
         this.props.setTitle();
     }
 
+    renderGuests = ({item}) => {
+        return(
+            <View style = {styles.guestView}>
+                <View style = {styles.guestUsernameView}>
+                    <Text style = {styles.guestUsernameText}>{item.username}</Text>
+                </View>
+            </View>
+        )
+    }
+
     render(){
         return(
             <View style ={styles.eventInfosView}>
-                <View style = {styles.eventInfoView}>
+                <View style = {styles.eventTitleView}>
                     <View style = {styles.eventHeaderView}>
                         <Text style = {styles.eventInfoText}>Title</Text>
                     </View>
@@ -29,6 +39,8 @@ class EventInfo extends Component {
                         <TextInput
                         placeholder="enter title"
                         style={styles.input}
+                        autoCapitalize = 'none'
+                        autoCorrect = {false}
                         value = {this.props.title}
                         onChangeText={(title) => this.props.onChangeTitle(title)}
                         maxLength={32}/>
@@ -36,6 +48,20 @@ class EventInfo extends Component {
                             <MaterialCommunityIcons name = "close-circle" size = {20} color = "lightgrey"/>
                         </TouchableOpacity>
                     </View>
+                </View>
+                <View style = {styles.eventHostView}>
+                    <View style = {styles.eventHostNameView}>
+                        <Text>Host</Text>
+                        <Text style = {styles.eventHostNameText}>{this.props.eventItem.hostName}</Text>
+                    </View>
+                </View>
+                <View style = {styles.guestsView}>
+                    <Text>Guest</Text>
+                    <FlatList
+                        data = {this.props.eventItem.guests}
+                        renderItem = {this.renderGuests}
+                        keyExtractor = {(item)=>item.userID.toString()}
+                    />
                 </View>
             </View>
         )
@@ -45,7 +71,7 @@ const styles = StyleSheet.create({
     eventInfosView:{
         flex: 1,
     },
-    eventInfoView: {
+    eventTitleView: {
         flexDirection: 'row',
         padding: 10,
         borderBottomWidth: 0.5,
@@ -77,6 +103,35 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         marginTop: 5,
         marginRight: 5,
+    },
+    eventHostView:{
+        padding: 5,
+        borderBottomWidth: 0.5,
+        borderBottomColor: "grey",
+    },
+    eventHostNameView:{
+        alignItems: "center",
+        justifyContent: 'center',
+    },
+    eventHostNameText:{
+        fontSize: 25,
+        fontFamily: 'Helvetica Neue',
+        color: "#3C3C3D",
+    },
+    guestsView:{
+        alignItems: "center",
+        justifyContent: 'center',
+    },
+    guestView:{
+        padding: 5,
+    },
+    guestUsernameView:{
+
+    },
+    guestUsernameText:{
+        fontSize: 15,
+        fontFamily: 'Helvetica Neue',
+        color: "#3C3C3D",
     }
 });
 

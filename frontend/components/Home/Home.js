@@ -9,6 +9,7 @@ class Home extends Component {
         super(props);
         this.state = {
         }
+        this.getUserID();
     }
 
     //logout
@@ -22,6 +23,12 @@ class Home extends Component {
           }
     }
 
+    getUserID = async() => {
+        this.setState({"userID": await AsyncStorage.getItem('userID')})
+    }
+
+
+
     render(){
         return(
             <View style ={styles.container}>
@@ -29,6 +36,7 @@ class Home extends Component {
                 <TouchableOpacity style = {styles.logoutBtn} onPress = {this.onPressLogout}>
                     <Text>Logout</Text>
                 </TouchableOpacity>
+                <Text>{this.state.userID}</Text>
             </View>
         )
     }

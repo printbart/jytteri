@@ -88,8 +88,11 @@ def searchLocationEvents():
     latitude = request.get_json()['latitude']
 
     #SQL
-    cur.execute("SELECT * FROM events WHERE longitude = " +
-    str(longitude) + "AND LATITUDE = " + str(latitude))
+    cur.execute("SELECT e.*, u.username, COUNT(a.userID) AS userJoinCount FROM Events e " +
+    "LEFT JOIN Attend a ON e.eventID = a.eventID " +
+    "INNER JOIN Users u ON u.userID = e.hostID " +
+    "WHERE e.longitude = " + str(longitude) + "AND e.LATITUDE = " + str(latitude) +
+    "GROUP BY e.eventID")
 
     mysql.connection.commit()
 
@@ -108,6 +111,8 @@ def searchLocationEvents():
                 "locationAddress": data[i][5],
                 "longitude": data[i][6],
                 "latitude": data[i][7],
+                "hostName": data[i][8],
+                "userJoinCount": data[i][9]
             })
     return jsonify(output)
 
@@ -120,7 +125,7 @@ def joinEvent():
     eventID = request.get_json()['eventID']
 
     #SQL
-    cur.execute("INSERT INTO attend(userID, eventID) VALUES (" + str(userID) + "," +str(eventID) + ")")
+    cur.execute("REPLACE INTO attend(userID, eventID) VALUES (" + str(userID) + "," +str(eventID) + ")")
 
     mysql.connection.commit()
 
@@ -170,7 +175,7 @@ def storeEvent():
             })
     return jsonify(output)
 
-#event event information location api
+#event information location api
 @app.route('/api/editEventInfo', methods=['POST'])
 def editEventInfo():
     #input values
@@ -184,6 +189,32 @@ def editEventInfo():
     mysql.connection.commit()
 
     return jsonify({"result": True})
+
+#grabbing users information in  a particular event
+@app.route('/api/getEventUsers', methods=['POST'])
+def getEventUsers():
+    #input values
+    cur = mysql.connection.cursor()
+    eventID = request.get_json()['eventID']
+
+    #SQL
+    cur.execute("SELECT u.userID, u.username "+
+    "FROM Attend a " +
+    "LEFT JOIN Users u ON a.userID = u.userID " +
+    "WHERE a.eventID = " + str(eventID) + " " )
+
+    mysql.connection.commit()
+    data = cur.fetchall()
+
+    #formatting data into json
+    output = [] #new array to store our formatted data
+    if data:
+        for i in range(len(data)):
+            output.append({
+                "userID": data[i][0],
+                "username": data[i][1],
+            })
+    return jsonify(output)
 
 #main
 if __name__ == '__main__':

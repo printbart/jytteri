@@ -57,7 +57,7 @@ class MenuContent extends Component {
                     <FontAwesome name="user-o" size={20} color="grey"/>
                 </View>
                 <View style = {styles.eventPopulationCountView}>
-                    <Text style = {styles.eventPopulationCountText}>5</Text>
+                    <Text style = {styles.eventPopulationCountText}>{item.userJoinCount ? item.userJoinCount : 0}</Text>
                 </View>
             </View>
             {Number(this.state.userID) !== item.hostID &&

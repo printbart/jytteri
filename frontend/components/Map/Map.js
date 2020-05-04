@@ -37,7 +37,12 @@ class Map extends Component {
 
   //toggle event modal
   toggleEventModal = (type, item) => {
-    this.setState({eventModalVisible: type, currentEventItem: item});
+    if(type){ //modal opened
+      this.getEventUsers(item);
+    }
+    else{ //modal closed
+      this.setState({eventModalVisible: type, currentEventItem: item});
+    }
   }
 
   //focus on the marker when pressed
@@ -168,7 +173,7 @@ class Map extends Component {
     });
     fetch(request).then((response) => {
       response.json().then((data) => {
-        console.log(data);
+        console.log(data); //implement column in SQL in the future
       });
     }).catch(function(err){
       console.log(err);
@@ -202,6 +207,27 @@ class Map extends Component {
     });
   }
 
+  //get event users
+  getEventUsers = (item) => {
+    const info = {
+      eventID: item.eventID //eventID
+    };
+    var request = new Request('http://localhost:5000/api/getEventUsers', {
+      method: 'POST',
+      headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),
+      body: JSON.stringify(info)
+    });
+    fetch(request).then((response) => {
+      response.json().then((data) => {
+        const event =  JSON.parse(JSON.stringify(item)); //current clicked event data
+        event['guests'] = data; //insert guests into event object
+        this.setState({eventModalVisible: true, currentEventItem: event});
+      });
+    }).catch(function(err){
+      console.log(err);
+    });
+  }
+
   render(){
     return(
       <View style = {styles.mapContainer}>
@@ -225,6 +251,7 @@ class Map extends Component {
 
           {this.state.myMarker && //user searched marker
             <Marker
+              key={this.state.myMarker.eventID}
               coordinate={{latitude: this.state.myMarker.latitude, longitude: this.state.myMarker.longitude}}
               onPress={this.onPressMarker.bind(this, this.state.myMarker)}
               pinColor = {"#000000"}

@@ -5,7 +5,7 @@ CREATE TABLE Users (
 );
 
 CREATE TABLE Attend (
-    userID INT NOT NULL,
+    userID INT NOT NULL UNIQUE,
     eventID INT NOT NULL
 );
 
