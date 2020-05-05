@@ -90,9 +90,7 @@ def searchLocationEvents():
 
     #SQL
     cur.execute("SELECT DISTINCT e.*, u.username, COUNT(a.userID) AS guestCount, " +
-    "(CASE WHEN EXISTS(SELECT 1 FROM Attend a INNER JOIN Events e ON a.eventID = e.eventID "
-    "WHERE e.longitude = "+str(longitude)+ " AND e.latitude = " + str(latitude) + " AND userID = "+ str(userID) +
-    ") THEN 1 ELSE 0 END) AS status "
+    "CASE WHEN EXISTS (SELECT * FROM Attend ar WHERE ar.eventID = e.eventID AND ar.userID = "+str(userID)+") THEN 1 ELSE 0 END AS status " +
     "FROM Events e " +
     "LEFT JOIN Attend a ON e.eventID = a.eventID " +
     "INNER JOIN Users u ON u.userID = e.hostID " +
@@ -222,7 +220,7 @@ def getEventUsers():
             })
     return jsonify(output)
 
-#join event of the user
+#remove user from attend (leave event)
 @app.route('/api/leaveEvent', methods=['POST'])
 def leaveEvent():
     #input values
@@ -232,6 +230,20 @@ def leaveEvent():
 
     #SQL
     cur.execute("DELETE FROM Attend WHERE userID = " + str(userID) + " AND eventID = " + str(eventID))
+
+    mysql.connection.commit()
+
+    return jsonify({"result": True})
+
+#delete event and all its foreign key
+@app.route('/api/deleteEvent', methods=['POST'])
+def deleteEvent():
+    #input values
+    cur = mysql.connection.cursor()
+    eventID = request.get_json()['eventID']
+
+    #SQL
+    cur.execute("DELETE FROM Events WHERE eventID = " + str(eventID))
 
     mysql.connection.commit()
 

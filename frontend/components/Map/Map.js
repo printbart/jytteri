@@ -148,8 +148,24 @@ class Map extends Component {
     });
   }
 
-  deleteEvent = () => {
-    console.log("delete event");
+  deleteEvent = (item) => {
+    const info = {
+      eventID: this.state.currentEventItem.eventID //eventID
+    };
+    const request = new Request('http://localhost:5000/api/deleteEvent', {
+      method: 'POST',
+      headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),
+      body: JSON.stringify(info)
+    });
+    fetch(request).then((response) => {
+      response.json().then((data) => {
+        if(data.result){
+          this.searchLocation(item); //refresh
+        }
+      });
+    }).catch(function(err){
+      console.log(err);
+    });
   }
 
   //zoom in to the pressed location

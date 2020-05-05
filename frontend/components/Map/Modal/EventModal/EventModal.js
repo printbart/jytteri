@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Modal, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Modal, TouchableOpacity, Alert } from 'react-native';
 
 //packages
 import AsyncStorage from '@react-native-community/async-storage';
@@ -44,8 +44,20 @@ class EventModal extends Component {
             await this.props.leaveEvent(this.props.currentEventItem); //leave event
         }
         else{ //if user is a host
-            await this.props.deleteEvent(); //delete event
+            //confirmation warning
+            Alert.alert("Confirm delete event?","Your event data will get deleted",
+                [{
+                    text: "Cancel",
+                    style: "cancel"
+                },
+                { text: "OK", onPress: () => this.deleteEvent() }] //user agreed to delete
+            );
         }
+    }
+
+    //delete event and all its data
+    async deleteEvent (){
+        await this.props.deleteEvent(this.props.currentEventItem); //delete event
         await this.closeEventModal(); //close event modal
     }
 
