@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
 
 //navigator
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 
 //icons
 import FoundationIcon from 'react-native-vector-icons/Foundation';
@@ -48,7 +47,8 @@ const BottomStackScreen = () => {
 const AuthenticationStackNavigator = () => {
     return(
         <AuthenticationStack.Navigator>
-            <AuthenticationStack.Screen name="login" component = {Login} options={{headerShown: false}}/>
+            <AuthenticationStack.Screen name="login" component = {Login}
+            options={{headerShown: false, }}/>
             <AuthenticationStack.Screen name="register" component = {Register} options={{headerShown: false}}/>
         </AuthenticationStack.Navigator>
     )
@@ -71,9 +71,9 @@ class Navigator extends Component {
                     <LoadingStack.Screen name="loading" component = {Loading}
                     options={{headerShown: false}}/>
                     <LoadingStack.Screen name="authentication" component = {AuthenticationStackNavigator}
-                    options={{headerShown: false}}/>
+                    options={{headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forScaleFromCenterAndroid,}}/>
                     <LoadingStack.Screen name="root" component = {RootStackNavigator}
-                    options={{headerShown: false}}/>
+                    options={{headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forScaleFromCenterAndroid,}}/>
                 </LoadingStack.Navigator>
             </NavigationContainer>
         );

@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList, Image } from 'react-native';
 
 //packages
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+//image
+import defaultProfilePicture from '../../../../../Images/defaultProfilePicture.png';
 
 
 class EventInfo extends Component {
@@ -19,9 +22,14 @@ class EventInfo extends Component {
 
     renderGuests = ({item}) => {
         return(
-            <View style = {styles.guestView}>
-                <View style = {styles.guestUsernameView}>
-                    <Text style = {styles.guestUsernameText}>{item.username}</Text>
+            <View style = {styles.infoView}>
+                <View style = {styles.profilePictureView}>
+                    <Image
+                        source = {defaultProfilePicture}
+                        style = {styles.profilePicture}/>
+                </View>
+                <View style = {styles.usernameView}>
+                    <Text style = {styles.usernameText}>{item.username}</Text>
                 </View>
             </View>
         )
@@ -51,15 +59,22 @@ class EventInfo extends Component {
                 <View style = {styles.usersView}>
                     <View style = {styles.hostView}>
                         <View style = {styles.headercenterView}>
-                            <Text>Host</Text>
+                            <Text style = {styles.headerCenterText}>Host</Text>
                         </View>
-                        <View style = {styles.hostNameView}>
-                            <Text style = {styles.hostNameText}>{this.props.eventItem.hostName}</Text>
+                        <View style = {styles.infoView}>
+                            <View style = {styles.profilePictureView}>
+                                <Image
+                                    source = {defaultProfilePicture}
+                                    style = {styles.profilePicture}/>
+                            </View>
+                            <View style = {styles.usernameView}>
+                                <Text style = {styles.usernameText}>{this.props.eventItem.hostName}</Text>
+                            </View>
                         </View>
                     </View>
                     <View style = {styles.guestsView}>
                         <View style = {styles.headercenterView}>
-                            <Text>Guest</Text>
+                            <Text style = {styles.headerCenterText}>Guest</Text>
                         </View>
                         <FlatList
                             data = {this.props.eventItem.guests}
@@ -116,32 +131,47 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     hostView: {
+        borderBottomWidth: 0.5,
+        borderBottomColor: "lightgrey",
+        padding: 10,
+    },
+    headercenterView: {
         padding: 5,
         alignItems: "center",
         justifyContent: 'center',
-        borderBottomWidth: 0.5,
-        borderBottomColor: "lightgrey",
     },
-    hostNameText: {
-        fontSize: 15,
+    headerCenterText:{
+        fontSize: 25,
+    },
+    infoView:{
+       flexDirection: "row",
+       padding: 5,
+    },
+    profilePictureView:{
+
+    },
+    profilePicture:{
+        borderRadius: 100,
+        borderWidth: 0.5,
+        borderColor: "grey",
+        width: 50,
+        height: 50,
+        backgroundColor: "white",
+    },
+    usernameView:{
+        alignItems: "center",
+        justifyContent: 'center',
+        padding: 10,
+    },
+    usernameText: {
+        fontSize: 20,
         fontFamily: 'Helvetica Neue',
         color: "#3C3C3D",
     },
     guestsView: {
-        padding: 5,
-        alignItems: "center",
-        justifyContent: 'center',
         borderBottomWidth: 0.5,
         borderBottomColor: "lightgrey",
-    },
-    guestUsernameView: {
-        alignItems: "center",
-        justifyContent: 'center',
-    },
-    guestUsernameText: {
-        fontSize: 15,
-        fontFamily: 'Helvetica Neue',
-        color: "#3C3C3D",
+        padding: 10,
     },
     leaveButtonView: {
         justifyContent: "flex-end",

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 
 class Header extends Component {
     constructor(props){
@@ -8,12 +8,11 @@ class Header extends Component {
         }
     }
 
-
     render(){
         return(
             <View style ={styles.headerView}>
                 <View style = {styles.usernameView}>
-                    <Text style  = {styles.usernameText}>*Input username*</Text>
+                    <Text style  = {styles.usernameText}>{this.props.userInfo ? this.props.userInfo.username : null}</Text>
                 </View>
             </View>
         )
@@ -32,6 +31,7 @@ const styles = StyleSheet.create({
     },
     usernameText:{
         fontSize: 20,
+        fontWeight: "500",
         fontFamily: 'Helvetica Neue',
         color: "white",
     }

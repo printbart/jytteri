@@ -249,6 +249,40 @@ def deleteEvent():
 
     return jsonify({"result": True})
 
+#Profile
+#get user information
+@app.route('/api/getUserInfo', methods=['POST'])
+def getUserInfo():
+    #input values
+    cur = mysql.connection.cursor()
+    userID = request.get_json()['userID']
+
+    #SQL
+    cur.execute("SELECT u.userID, u.username, "+
+    "e.locationName AS hostEventName, e.locationAddress AS hostEventAddress, " +
+    "g.locationName AS guestEventName, g.locationAddress AS guestEventAddress " +
+    "FROM users u " +
+    "LEFT JOIN Attend a ON u.userID = a.userID " +
+    "LEFT JOIN Events e ON e.hostID = u.userID " +
+    "LEFT JOIN Events g ON g.eventID = a.eventID " +
+    "WHERE u.userID =6;")
+
+    mysql.connection.commit()
+    data = cur.fetchall()
+
+    #formatting data into json
+    output = [] #new array to store our formatted data
+    if data:
+        output.append({
+            "userID": data[0][0],
+            "username": data[0][1],
+            "hostEventName": data[0][2],
+            "hostEventAddress": data[0][3],
+            "guestEventName": data[0][4],
+            "guestEventAddress": data[0][5],
+        })
+    return jsonify(output)
+
 
 #main
 if __name__ == '__main__':
