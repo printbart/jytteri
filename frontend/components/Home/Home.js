@@ -4,6 +4,11 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 //packages
 import AsyncStorage from '@react-native-community/async-storage';
 
+//components
+import Header from './Header/Header';
+import UserInfo from './UserInfo/UserInfo';
+import EventInfo from './EventInfo/EventInfo';
+
 class Home extends Component {
     constructor(props){
         super(props);
@@ -16,39 +21,51 @@ class Home extends Component {
     onPressLogout = async() => {
         try{
             await AsyncStorage.clear(); //clear my id in asyncstorage
-            this.props.navigation.navigate("authentication"); //navigate to authenitcation page
-          }
-          catch (err){
-            console.log(err);
-          }
+            await this.props.navigation.navigate("authentication"); //navigate to authenitcation page
+        }
+        catch (err){
+        console.log(err);
+        }
     }
 
     getUserID = async() => {
-        this.setState({"userID": await AsyncStorage.getItem('userID')})
+        this.setState({"userID": await AsyncStorage.getItem('userID')}) //initialize my userID
     }
 
 
 
     render(){
         return(
-            <View style ={styles.container}>
-                <Text style = {styles.title}>Home</Text>
+            <View style ={styles.homeView}>
+                <Header />
+                <UserInfo />
+                <EventInfo />
                 <TouchableOpacity style = {styles.logoutBtn} onPress = {this.onPressLogout}>
-                    <Text>Logout</Text>
+                    <Text style = {styles.logoutText}>Logout</Text>
                 </TouchableOpacity>
-                <Text>{this.state.userID}</Text>
             </View>
         )
     }
 }
 const styles = StyleSheet.create({
-    container:{
+    homeView:{
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
+        backgroundColor: "white",
     },
     title: {
         fontSize: 40
+    },
+    logoutBtn:{
+        margin: 10,
+        padding: 10,
+        alignItems: 'center',
+        backgroundColor: "#3C3C3D",
+        borderRadius: 10,
+    },
+    logoutText:{
+        color: "white",
+        fontSize: 15,
+        fontFamily: 'Helvetica Neue',
     }
 });
 

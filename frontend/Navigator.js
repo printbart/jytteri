@@ -6,6 +6,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
+//icons
+import FoundationIcon from 'react-native-vector-icons/Foundation';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+
 
 //component
 import Map from './components/Map/Map';
@@ -24,9 +28,19 @@ const AuthenticationStack = createStackNavigator();
 
 const BottomStackScreen = () => {
     return(
-        <BottomTab.Navigator>
-            <BottomTab.Screen name="map" component={Map} />
-            <BottomTab.Screen name="home" component={Home} />
+        <BottomTab.Navigator tabBarOptions={{showLabel: false, activeTintColor: "#3C3C3D", inactiveTintColor: "grey"}}>
+            <BottomTab.Screen name="map" component={Map}
+            options = {{
+                tabBarIcon: ({color}) => (
+                    <FoundationIcon name="map" color={color} size={23} />
+                )
+            }}/>
+            <BottomTab.Screen name="home" component={Home}
+            options={{
+                tabBarIcon: ({color}) => (
+                  <FontAwesomeIcon name="user-o" color={color} size={23} />
+                )
+            }}/>
         </BottomTab.Navigator>
     )
 }
