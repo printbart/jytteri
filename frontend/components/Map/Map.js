@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Platform, Alert } from 'react-native';
+import { StyleSheet, View, Platform, Alert, Image } from 'react-native';
 
 //libaries
 import { request, PERMISSIONS } from 'react-native-permissions';
@@ -13,6 +13,9 @@ import SearchModal from './Modal/SearchModal/SearchModal';
 import LocateMeButton from './LocateMeButton/LocateMeButton';
 import Menu from './Menu/Menu';
 import EventModal from './Modal/EventModal/EventModal';
+
+//marker
+import JytteriLogo from './JytteriLogo.png';
 
 
 class Map extends Component {
@@ -300,8 +303,8 @@ class Map extends Component {
               coordinate={{latitude: this.state.myMarker.latitude, longitude: this.state.myMarker.longitude}}
               onPress={this.onPressMarker.bind(this, this.state.myMarker)}
               pinColor = {"#000000"}
-              zIndex = {1}>
-                <MaterialCommunityIcons name="ethereum" size={25} color="#C23B22"/>
+              zIndex = {-1}>
+                <View style = {styles.myMarker}></View>
             </Marker>
           }
           {this.state.events.map((event) => { //all the events marker
@@ -311,7 +314,9 @@ class Map extends Component {
                 coordinate={{longitude: event.longitude, latitude: event.latitude}}
                 onPress = {this.onPressMarker.bind(this, event)}
                 pinColor = {"#123456"}>
-                  <MaterialCommunityIcons name="balloon" size={50} color="#3C3C3D"/>
+                  <Image
+                    source = {JytteriLogo}
+                    style = {styles.eventMarker}/>
               </Marker>
             )
           })}
@@ -336,6 +341,17 @@ const styles = StyleSheet.create({
   mapView: {
     flex: 1,
   },
+  eventMarker:{
+    width: 25,
+    height: 25,
+  },
+  myMarker:{
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    backgroundColor: "yellow",
+    opacity: 0.5
+  }
 });
 
 export default Map;
