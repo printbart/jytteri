@@ -23,10 +23,13 @@ CORS(app)
 @app.route('/api/register', methods=['POST'])
 def register():
     cur = mysql.connection.cursor()
+    firstname = request.get_json()['firstname']
+    lastname = request.get_json()['lastname']
     username = request.get_json()['username']
+    password = bcrpyt.generate_password_hash(request.get_json()['password']).decode('utf-8') #encrypted
 
-    cur.execute("INSERT INTO users (username) VALUES ('" +
-    username + "')")
+    cur.execute("INSERT INTO users (username, firstname, lastname, password) VALUES ('" +
+    username +"','" + firstname + "','" + lastname + "','" +password+"')")
 
     mysql.connection.commit()
 
@@ -40,14 +43,18 @@ def register():
 def login():
     cur = mysql.connection.cursor()
     username = request.get_json()['username']
+    password = request.get_json()['password']
 
-    cur.execute("SELECT userID FROM users WHERE username = '" +
+    cur.execute("SELECT userID, password FROM users WHERE username = '" +
     username + "'")
 
     mysql.connection.commit()
     data = cur.fetchall()
     cur.close()
-    data = {'userID': data[0][0]}
+    data = {
+        'userID': data[0][0],
+        'password': bcrpyt.check_password_hash(data[0][1], password)
+    }
 
     return jsonify(data)
 

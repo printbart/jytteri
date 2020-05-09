@@ -5,7 +5,7 @@ import { StyleSheet, View, Platform, Alert, Image } from 'react-native';
 import { request, PERMISSIONS } from 'react-native-permissions';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontistoIcon from 'react-native-vector-icons/Fontisto';
 import AsyncStorage from '@react-native-community/async-storage';
 
 //components
@@ -15,7 +15,7 @@ import Menu from './Menu/Menu';
 import EventModal from './Modal/EventModal/EventModal';
 
 //marker
-import JytteriLogo from './JytteriLogo.png';
+import JytteriLogo from '../../Images/JytteriLogo.png';
 
 
 class Map extends Component {
@@ -304,7 +304,7 @@ class Map extends Component {
               onPress={this.onPressMarker.bind(this, this.state.myMarker)}
               pinColor = {"#000000"}
               zIndex = {-1}>
-                <View style = {styles.myMarker}></View>
+                <FontistoIcon name="flag" size = {40} color = "#C23B22" style = {styles.myMarker}/>
             </Marker>
           }
           {this.state.events.map((event) => { //all the events marker
@@ -346,11 +346,7 @@ const styles = StyleSheet.create({
     height: 25,
   },
   myMarker:{
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    backgroundColor: "yellow",
-    opacity: 0.5
+    opacity: 0.75,
   }
 });
 

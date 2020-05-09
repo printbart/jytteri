@@ -1,13 +1,22 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput,TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 
 //packages
 import AsyncStorage from '@react-native-community/async-storage';
+
+//logo
+import JytteriLogo from '../../../Images/JytteriLogo.png';
+
+//components
+import Name from './Name/Name';
+import Username from './Username/Username';
+import Password from './Password/Password';
 
 class Login extends Component {
     constructor(props){
         super(props);
         this.state = {
+            page: 0, //0: name, 1: username, 2: password
         }
     }
 
@@ -16,10 +25,44 @@ class Login extends Component {
         this.props.navigation.navigate("login");
     }
 
+    //go back home
+    onPressHome = () => {
+        this.props.navigation.navigate("authmain");
+    }
+
+    //when pressed return on keyboard
+    onPressNext = () => {
+        this.setState({page: this.state.page+1});
+    }
+
+    //set firstname on keyboard change
+    setFirstName = (firstname) => {
+        this.setState({firstname: firstname})
+    }
+
+    //set lastname on keyboard change
+    setLastName = (lastname) => {
+        this.setState({lastname: lastname})
+    }
+
+    //set username on keyboard change
+    setUsername = (username) => {
+        this.setState({username: username});
+    }
+
+    //set password on keyboard change
+    setPassword = (password) => {
+        this.setState({password})
+    }
+
     //navigate to home if valid
     onPressRegister = () => {
+        console.log(this.state);
         var data = {
-            username: this.state.usernameValue
+            firstname: this.state.firstname,
+            lastname: this.state.lastname,
+            username: this.state.username,
+            password: this.state.password,
           }
           var request = new Request('http://localhost:5000/api/register', {
             method: 'POST',
@@ -28,7 +71,9 @@ class Login extends Component {
           });
           fetch(request).then((response) => {
             response.json().then((data) => {
-                console.log(data);
+                if(data.result){
+                    this.props.navigation.navigate("root");
+                }
             });
           }).catch(function(err){
             console.log(err);
@@ -37,41 +82,53 @@ class Login extends Component {
 
     render(){
         return(
-            <View style = {styles.LoginView}>
-                <View style = {styles.titleView}>
-                    <Text style = {styles.titleText}>Register</Text>
-                </View>
-                <View style = {styles.inputView}>
-                    <TextInput placeholder="username" style={styles.input} autoCapitalize = 'none'
-                        onChangeText={(username) => this.setState({usernameValue: username})} maxLength={16}/>
-                    <TouchableOpacity style = {styles.toggleRegisterView} onPress = {this.onPressRegister}>
-                        <Text style = {styles.toggleRegisterText}>Register</Text>
+            <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
+                <View style = {styles.loginView}>
+                    <View style = {styles.logoView}>
+                        <Image
+                            source = {JytteriLogo}
+                            style = {styles.logo}/>
+                    </View>
+                    <View style = {styles.inputView}>
+                        {this.state.page === 0 ?
+                        <Name
+                            onPressNext = {this.onPressNext}
+                            firstname = {this.setFirstName}
+                            lastname = {this.setLastName}/>:
+                        this.state.page === 1 ?
+                        <Username
+                            onPressNext = {this.onPressNext}
+                            username = {this.setUsername}/>:
+                        <Password
+                            password = {this.setPassword}
+                            register = {this.onPressRegister}/>}
+                    </View>
+                    <TouchableOpacity style = {styles.backView} onPress = {this.onPressHome}>
+                        <Text style = {styles.backText}>Go Back</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style = {styles.toggleRegisterView} onPress = {this.onPressNavigateLogin}>
-                        <Text style = {styles.toggleRegisterText}>Login</Text>
-                    </TouchableOpacity>
                 </View>
-            </View>
+            </KeyboardAvoidingView>
         )
     }
 }
 const styles = StyleSheet.create({
-    LoginView:{
+    loginView: {
         flex: 1,
         backgroundColor: "white",
     },
-    titleView : {
+    logo : {
+        resizeMode:'contain',
+        width: 50,
+        height: 50,
+    },
+    logoView : {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
     },
-    titleText: {
-        fontSize: 40
-    },
-    inputView:{
-        flex: 1,
+    inputView: {
+        flex: 2,
         margin: 10,
-        justifyContent: 'center'
     },
     input: {
         height: 40,
@@ -80,13 +137,17 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingLeft: 15,
     },
-    toggleRegisterView: {
+    backView: {
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
     },
-    toggleRegisterText:{
-        fontSize: 20,
-    }
+    backText: {
+        color: "#F9A908",
+        fontWeight: "bold",
+        fontSize: 15,
+        fontFamily: "Kailasa",
+    },
 });
 
 export default Login;

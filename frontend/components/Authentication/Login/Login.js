@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput,TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 
 //packages
 import AsyncStorage from '@react-native-community/async-storage';
+
+//logo
+import JytteriLogo from '../../../Images/JytteriLogo.png';
 
 class Login extends Component {
     constructor(props){
@@ -11,14 +14,21 @@ class Login extends Component {
         }
     }
 
+    //navigate to register
     onPressReigister = () =>{
         this.props.navigation.navigate("register");
+    }
+
+    //navigate to authentication main
+    onPressBack = () => {
+        this.props.navigation.navigate("authmain");
     }
 
     //navigate to home if valid
     onPressLogin = () => {
         var data = {
-            username: this.state.usernameValue
+            username: this.state.username,
+            password: this.state.password,
           }
           var request = new Request('http://localhost:5000/api/login', {
             method: 'POST',
@@ -27,8 +37,10 @@ class Login extends Component {
           });
           fetch(request).then((response) => {
             response.json().then(async(data) => {
-                await AsyncStorage.setItem('userID', data.userID.toString()); //store userID globally
-                this.props.navigation.navigate("root"); //navigate to main page
+                if(data.password){ //encrpytion password matches
+                    await AsyncStorage.setItem('userID', data.userID.toString()); //store userID globally
+                    this.props.navigation.navigate("root"); //navigate to main page
+                }
             });
           }).catch(function(err){
             console.log(err);
@@ -37,55 +49,110 @@ class Login extends Component {
 
     render(){
         return(
-            <View style = {styles.LoginView}>
-                <View style = {styles.titleView}>
-                    <Text style = {styles.titleText}>Login</Text>
-                </View>
-                <View style = {styles.inputView}>
-                    <TextInput placeholder="username" style={styles.input} autoCapitalize = 'none'
-                        onChangeText={(username) => this.setState({usernameValue: username})} maxLength={16}/>
-                    <TouchableOpacity style = {styles.toggleRegisterView} onPress = {this.onPressLogin}>
-                        <Text style = {styles.toggleRegisterText}>Login</Text>
+            <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
+                <View style = {styles.loginView}>
+                    <View style = {styles.logoView}>
+                        <Image
+                            source = {JytteriLogo}
+                            style = {styles.logo}/>
+                    </View>
+                    <View style = {styles.loginInputView}>
+                        <TextInput
+                            placeholder="username"
+                            style={styles.input}
+                            autoCapitalize = 'none'
+                            ref = {(input) => {this.usernameInput = input; }}
+                            onChangeText={(username) => this.setState({username})}
+                            onSubmitEditing={() => { this.passwordInput.focus(); }}
+                            maxLength={16}/>
+                        <TextInput
+                            placeholder="password"
+                            style={styles.input}
+                            autoCapitalize = 'none'
+                            ref = {(input) => {this.passwordInput = input; }}
+                            onChangeText={(password) => this.setState({password})}
+                            onSubmitEditing={this.onPressLogin}
+                            maxLength={16}
+                            secureTextEntry={true}/>
+                        <TouchableOpacity style = {styles.loginBtnView} onPress = {this.onPressLogin}>
+                            <Text style = {styles.loginBtnText}>Login</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style = {styles.backBtnView} onPress = {this.onPressBack}>
+                            <Text style = {styles.backBtnText}>Back</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity style = {styles.registerView} onPress = {this.onPressReigister}>
+                            <Text style = {styles.registerText}>Register</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style = {styles.toggleRegisterView} onPress = {this.onPressReigister}>
-                        <Text style = {styles.toggleRegisterText}>Register</Text>
-                    </TouchableOpacity>
                 </View>
-            </View>
+            </KeyboardAvoidingView>
         )
     }
 }
 const styles = StyleSheet.create({
-    LoginView:{
+    loginView:{
         flex: 1,
         backgroundColor: "white",
     },
-    titleView : {
+    logoView: {
         flex: 1,
+        justifyContent: 'center',
         alignItems: 'center',
-        justifyContent: 'center'
     },
-    titleText: {
-        fontSize: 40
+    logo : {
+        resizeMode:'contain',
+        width: 50,
+        height: 50,
     },
-    inputView:{
+    loginInputView:{
         flex: 1,
-        margin: 10,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        borderBottomWidth: 0.5,
+        borderBottomColor: "lightgrey",
     },
     input: {
         height: 40,
-        margin: 20,
+        margin: 10,
+        marginLeft: 20,
+        marginRight: 20,
         backgroundColor: '#f5f5f5',
         borderRadius: 10,
         paddingLeft: 15,
     },
-    toggleRegisterView: {
+    loginBtnView: {
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        backgroundColor: "#f9a908",
+        borderRadius: 5,
+        padding: 5,
+        margin: 20,
     },
-    toggleRegisterText:{
+    loginBtnText: {
         fontSize: 20,
+        color: "white",
+    },
+    backBtnView:{
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    backBtnText: {
+        color: "#f9a908",
+    },
+    registerView: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: "#ffd685",
+        borderRadius: 5,
+        padding: 5,
+        margin: 20,
+        opacity: 0.5,
+        marginBottom: 50,
+    },
+    registerText : {
+        fontSize: 20,
+        color: "#ed9e00",
+        fontWeight: "500",
+        opacity: 1,
     }
 });
 

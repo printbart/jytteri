@@ -76,11 +76,14 @@ class EventInfo extends Component {
                         <View style = {styles.headercenterView}>
                             <Text style = {styles.headerCenterText}>Guest</Text>
                         </View>
+                        {this.props.eventItem.guest ?
                         <FlatList
                             data = {this.props.eventItem.guests}
                             renderItem = {this.renderGuests}
-                            keyExtractor = {(item)=>item.userID.toString()}
-                        />
+                            keyExtractor = {(item)=>item.userID.toString()}/> :
+                        <View style = {styles.noneMessageView}>
+                            <Text style = {styles.noneMessage}>No one at the moment</Text>
+                        </View>}
                     </View>
                 </View>
                 <TouchableOpacity style = {styles.leaveButtonView} onPress = {this.props.leaveEvent}>
@@ -145,7 +148,7 @@ const styles = StyleSheet.create({
     },
     infoView:{
        flexDirection: "row",
-       padding: 5,
+       padding: 10,
     },
     profilePictureView:{
 
@@ -167,6 +170,15 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontFamily: 'Helvetica Neue',
         color: "#3C3C3D",
+    },
+    noneMessageView:{
+        padding: 10,
+    },
+    noneMessage:{
+        fontSize: 20,
+        fontFamily: 'Helvetica Neue',
+        color: "lightgrey",
+        textAlign: 'center',
     },
     guestsView: {
         borderBottomWidth: 0.5,

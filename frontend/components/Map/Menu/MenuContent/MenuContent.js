@@ -102,8 +102,6 @@ const styles = StyleSheet.create({
     eventView:{
         margin: 5,
         padding: 5,
-        borderBottomWidth: 0.5,
-        borderBottomColor: "grey",
         flexDirection: "row",
     },
     eventTitleView:{
@@ -111,7 +109,6 @@ const styles = StyleSheet.create({
     },
     eventTitleText:{
         fontSize: 20,
-        fontWeight: "200",
         fontFamily: 'Helvetica Neue',
         color: "#3C3C3D",
     },
@@ -120,6 +117,7 @@ const styles = StyleSheet.create({
         fontWeight: "300",
         fontFamily: 'Helvetica Neue',
         color: "#3C3C3D",
+        padding: 5,
     },
     eventPopulationView:{
         width: 50,

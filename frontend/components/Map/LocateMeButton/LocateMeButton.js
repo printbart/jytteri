@@ -19,7 +19,7 @@ class LocateMeButton extends Component {
     render(){
         return(
             <TouchableOpacity style = {styles.locateMeButtonView} onPress = {this.centerMyLocation}>
-                <MaterialIcons name="my-location" size={25} color="#3C3C3D"/>
+                <MaterialIcons name="my-location" size={20} color="#3C3C3D"/>
             </TouchableOpacity>
         )
     }
@@ -27,8 +27,8 @@ class LocateMeButton extends Component {
 
 const styles = StyleSheet.create({
     locateMeButtonView:{
-        width: 40,
-        height: 40,
+        width: 35,
+        height: 35,
         position: 'absolute',
         backgroundColor: "#f5f5f5",
         right: 10,

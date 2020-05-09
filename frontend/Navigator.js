@@ -16,6 +16,7 @@ import Home from './components/Home/Home';
 import Login from './components/Authentication/Login/Login';
 import Register from './components/Authentication/Register/Register';
 import Loading from './components/Loading/Loading';
+import AuthMain from './components/Authentication/AuthMain/AuthMain';
 
 
 
@@ -47,8 +48,8 @@ const BottomStackScreen = () => {
 const AuthenticationStackNavigator = () => {
     return(
         <AuthenticationStack.Navigator>
-            <AuthenticationStack.Screen name="login" component = {Login}
-            options={{headerShown: false, }}/>
+            <AuthenticationStack.Screen name="authmain" component = {AuthMain} options={{headerShown: false, }}/>
+            <AuthenticationStack.Screen name="login" component = {Login} options={{headerShown: false, }}/>
             <AuthenticationStack.Screen name="register" component = {Register} options={{headerShown: false}}/>
         </AuthenticationStack.Navigator>
     )
