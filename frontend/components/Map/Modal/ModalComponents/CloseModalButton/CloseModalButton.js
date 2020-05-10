@@ -18,7 +18,7 @@ class CloseModalButton extends Component {
     render(){
         return(
             <TouchableOpacity style = {styles.cancelView} onPress={this.onPressCloseModal.bind(this)}>
-                <MaterialIcons name="close" size={25} color="grey"/>
+                <MaterialIcons name="close" size={25} color="#e6e6e6"/>
             </TouchableOpacity>
         )
     }

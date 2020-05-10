@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Alert, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
 
 //packages
 import AsyncStorage from '@react-native-community/async-storage';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
+//icon
+import JytteriLogo from '../../../../Images/JytteriLogo.png';
 
 class MenuContent extends Component {
     constructor(props){
@@ -20,20 +23,9 @@ class MenuContent extends Component {
         this.props.openEventModal(item);
     }
 
-    //confirmation alert
-    onPressHostEventAlert = () =>{
-        Alert.alert("Confirm to host?","Your previous hosted events will get deleted",
-          [{
-            text: "Cancel",
-            style: "cancel"
-          },
-          { text: "OK", onPress: () => this.onPressHostEvent() }],
-        );
-    }
-
     //if host button clicked
-    onPressHostEvent(){
-        this.props.storeLocation();
+    onPressHostEvent = () => {
+        this.props.openHostEventModal();
     }
 
     //join 
@@ -44,6 +36,11 @@ class MenuContent extends Component {
     renderEvents = ({item}) => {
         return(
         <TouchableOpacity style = {styles.eventView} onPress = {this.onPressOpenEventModal.bind(this, item)}>
+            <View style = {styles.conditionView}>
+                    <Image
+                        source = {JytteriLogo}
+                        style = {[styles.logo, (item.startDate - new Date())<0 && {opacity: 0.3}]}/>
+            </View>
             <View style = {styles.eventTitleView}>
                 <View>
                     <Text style = {styles.eventTitleText} numberOfLines={1}>{item.eventName}</Text>
@@ -74,7 +71,7 @@ class MenuContent extends Component {
                     data = {this.props.myMarker.events}
                     renderItem = {this.renderEvents}
                     keyExtractor = {(item)=>item.eventID.toString()}/>
-                <TouchableOpacity style = {styles.addLocationButtonView} onPress = {this.onPressHostEventAlert}>
+                <TouchableOpacity style = {styles.addLocationButtonView} onPress = {this.onPressHostEvent}>
                     <Text style = {styles.addLocationButtonText}>Host</Text>
                 </TouchableOpacity>
             </View>
@@ -89,20 +86,30 @@ const styles = StyleSheet.create({
     addLocationButtonView:{
         width: "100%",
         alignItems: 'center',
-        backgroundColor: "#3C3C3D",
+        backgroundColor: "#f9a908",
         margin: 5,
-        padding: 10,
+        padding: 5,
         borderRadius: 10,
     },
     addLocationButtonText:{
         color: "white",
-        fontSize: 15,
+        fontSize: 20,
+        fontWeight: "bold",
         fontFamily: 'Helvetica Neue',
     },
     eventView:{
         margin: 5,
         padding: 5,
         flexDirection: "row",
+    },
+    conditionView:{
+        width: 35,
+        justifyContent: "center",
+    },
+    logo: {
+        resizeMode:'contain',
+        width: 25,
+        height: 25,
     },
     eventTitleView:{
         flex: 1,
@@ -134,7 +141,6 @@ const styles = StyleSheet.create({
     },
     eventPopulationCountText:{
         fontSize: 20,
-        fontWeight: "300",
         fontFamily: 'Helvetica Neue',
         color: "#3C3C3D",
     },

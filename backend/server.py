@@ -121,9 +121,11 @@ def searchLocationEvents():
                 "locationAddress": data[i][5],
                 "longitude": data[i][6],
                 "latitude": data[i][7],
-                "hostName": data[i][8],
-                "guestCount": data[i][9],
-                "status": data[i][10]
+                "startDate": data[i][8],
+                "endDate": data[i][9],
+                "hostName": data[i][10],
+                "guestCount": data[i][11],
+                "status": data[i][12]
             })
     return jsonify(output)
 
@@ -155,13 +157,22 @@ def storeEvent():
     locationAddress = request.get_json()['locationAddress']
     longitude = request.get_json()['longitude']
     latitude = request.get_json()['latitude']
+    startDate = request.get_json()['startDate']
+    endDate = request.get_json()['endDate']
 
     #SQL
     #query 1) update event location if data exist. else add data
     cur.execute(
-    "REPLACE INTO events SET hostID = " +
-    str(hostID) + ",eventName = '" + eventName + "', locationID = '" + locationID + "', locationName = '"+
-    locationName + "', locationAddress = '" + locationAddress + "', longitude = '" + str(longitude) + "', latitude = '" + str(latitude) + "'")
+    "INSERT INTO events SET "+
+    "hostID = " + str(hostID) +
+    ", eventName = '" + eventName +
+    "', locationID = '" + locationID +
+    "', locationName = '" + locationName +
+    "', locationAddress = '" + locationAddress +
+    "', longitude = '" + str(longitude) +
+    "', latitude = '" + str(latitude) +
+    "', startDate = " + str(startDate) +
+    ", endDate = " + str(endDate))
 
     #query 2) grab all events happening in my location
     cur.execute("SELECT * FROM events WHERE longitude = " +
@@ -183,6 +194,8 @@ def storeEvent():
                 "locationAddress": data[i][5],
                 "longitude": data[i][6],
                 "latitude": data[i][7],
+                "startDate": data[i][8],
+                "endDate": data[i][9]
             })
     return jsonify(output)
 
@@ -272,7 +285,7 @@ def getUserInfo():
     "LEFT JOIN Attend a ON u.userID = a.userID " +
     "LEFT JOIN Events e ON e.hostID = u.userID " +
     "LEFT JOIN Events g ON g.eventID = a.eventID " +
-    "WHERE u.userID =6;")
+    "WHERE u.userID =" + str(userID))
 
     mysql.connection.commit()
     data = cur.fetchall()

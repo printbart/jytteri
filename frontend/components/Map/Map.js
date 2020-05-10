@@ -13,6 +13,7 @@ import SearchModal from './Modal/SearchModal/SearchModal';
 import LocateMeButton from './LocateMeButton/LocateMeButton';
 import Menu from './Menu/Menu';
 import EventModal from './Modal/EventModal/EventModal';
+import HostEventModal from './Modal/HostEventModal/HostEventModal';
 
 //marker
 import JytteriLogo from '../../Images/JytteriLogo.png';
@@ -24,6 +25,7 @@ class Map extends Component {
     this.state = {
       searchModalVisible: false,
       eventModalVisible: false,
+      hostEventModalVisible: false,
       events: [],
     }
   }
@@ -45,6 +47,16 @@ class Map extends Component {
     }
     else{ //modal closed
       this.setState({eventModalVisible: type, currentEventItem: item});
+    }
+  }
+
+  //open host event modal
+  toggleHostEventModal = (visible) => {
+    if(visible){
+      this.setState({hostEventModalVisible: true});
+    }
+    else{
+      this.setState({hostEventModalVisible: false});
     }
   }
 
@@ -130,6 +142,39 @@ class Map extends Component {
     });
   }
 
+  //save event info when done hosting
+  saveEventInfo = (eventName, startDate, endDate) => {
+    let info = {
+      eventName, startDate, endDate
+    };
+    let myMarker =  JSON.parse(JSON.stringify(this.state.myMarker));
+    myMarker['eventName'] = eventName;
+    myMarker['startDate'] = startDate;
+    myMarker['endDate'] = endDate;
+    let request = new Request('http://localhost:5000/api/storeEvent', {
+      method: 'POST',
+      headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),
+      body: JSON.stringify(myMarker)
+    });
+    fetch(request).then((response) => {
+      response.json().then((data) => {
+        let events = JSON.parse(JSON.stringify(this.state.events)); //all the events
+        myMarker['events'] = data; // store all the data inside 
+        for(var i in events){ // check all the events to see if user has other events hosted
+          if(Number(events[i].hostID) === Number(myMarker.hostID)){
+            events.splice(i, 1); //delete event user hosted
+          }
+        }
+        events.push(myMarker);
+
+        this.setState({myMarker: myMarker, events: events});
+      });
+    }).catch(function(err){
+      console.log(err);
+    });
+  }
+
+  //remove user form event
   leaveEvent = async(item) => {
     const info = {
       userID: await AsyncStorage.getItem('userID'), //userID
@@ -174,12 +219,11 @@ class Map extends Component {
   //zoom in to the pressed location
   searchLocation = async(item) => {
     this.setState({myMarker: null});
-
+  
     const location = {
       // search modal data or onPressMarker data
       locationID: item.place_id ? item.place_id : item.locationID,
       hostID: await AsyncStorage.getItem('userID'),
-      eventName: "Getting lit over here!",
       locationName: item.name ? item.name : item.locationName,
       locationAddress: item.formatted_address ? item.formatted_address : item.locationAddress,
       latitude: item.geometry ? item.geometry.location.lat : item.latitude,
@@ -187,6 +231,7 @@ class Map extends Component {
       latitudeDelta: 0.09,
       longitudeDelta: 0.035,
     };
+    console.log(location);
 
     var request = new Request('http://localhost:5000/api/searchLocationEvents', {
       method: 'POST',
@@ -290,6 +335,11 @@ class Map extends Component {
           leaveEvent = {this.leaveEvent}
           deleteEvent = {this.deleteEvent}
           />
+        <HostEventModal
+          visible = {this.state.hostEventModalVisible}
+          toggleHostEventModal = {this.toggleHostEventModal}
+          saveEventInfo = {this.saveEventInfo}
+        />
         <MapView 
           style = {styles.mapView}
           ref={(map) => {this.map = map}}
@@ -328,6 +378,7 @@ class Map extends Component {
           myMarker = {this.state.myMarker}
           storeLocation = {this.storeLocation}
           toggleEventModal = {this.toggleEventModal}
+          toggleHostEventModal = {this.toggleHostEventModal}
           joinEvent = {this.joinEvent}/>
       </View>
     );

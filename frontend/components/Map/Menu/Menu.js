@@ -22,6 +22,10 @@ class Menu extends Component {
     openEventModal = (item) => {
         this.props.toggleEventModal(true, item); //open event modual and set event item
     }
+    //open host event modal
+    openHostEventModal = () => {
+        this.props.toggleHostEventModal(true);
+    }
 
     render(){
         return(
@@ -33,6 +37,7 @@ class Menu extends Component {
                         myMarker = {this.props.myMarker}
                         storeLocation = {this.props.storeLocation}
                         openEventModal = {this.openEventModal}
+                        openHostEventModal = {this.openHostEventModal}
                         joinEvent = {this.props.joinEvent}/> :
                     <MenuNotice />
                 }

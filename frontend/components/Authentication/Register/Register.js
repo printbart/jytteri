@@ -57,7 +57,6 @@ class Login extends Component {
 
     //navigate to home if valid
     onPressRegister = () => {
-        console.log(this.state);
         var data = {
             firstname: this.state.firstname,
             lastname: this.state.lastname,

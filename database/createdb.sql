@@ -20,11 +20,13 @@ CREATE TABLE Attend (
 
 CREATE TABLE Events (
     eventID SERIAL NOT NULL UNIQUE,
-    hostID INT NOT NULL UNIQUE,
+    hostID INT NOT NULL,
     eventName VARCHAR(31),
     locationID TEXT,
     locationName VARCHAR(31),
     locationAddress VARCHAR(255),
     longitude DOUBLE,
-    latitude DOUBLE
+    latitude DOUBLE,
+    startDate BIGINT NOT NULL,
+    endDate BIGINT NOT NULL
 );
