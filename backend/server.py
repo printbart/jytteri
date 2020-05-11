@@ -83,6 +83,8 @@ def setEventsOnMap():
                 "locationAddress": data[i][5],
                 "longitude": data[i][6],
                 "latitude": data[i][7],
+                "startDate": data[i][8],
+                "endDate": data[i][9],
             })
     return jsonify(output)
 
@@ -206,9 +208,16 @@ def editEventInfo():
     cur = mysql.connection.cursor()
     eventID = request.get_json()['eventID']
     eventName = request.get_json()['eventName']
+    startDate = request.get_json()['startDate']
+    endDate = request.get_json()['endDate']
 
     #SQL
-    cur.execute("UPDATE events SET eventName = '" + eventName + "' WHERE eventID = '" + str(eventID) + "'")
+    cur.execute("UPDATE events "+
+    "SET eventName = '" + eventName + "', " +
+    "startDate = " + str(startDate) + ", " +
+    "endDate = " + str(endDate) + " " +
+    "WHERE " +
+    "eventID = '" + str(eventID) + "'")
 
     mysql.connection.commit()
 

@@ -4,7 +4,7 @@ import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-nativ
 //packages
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-class EventTitle extends Component {
+class EditEventTitle extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -19,16 +19,15 @@ class EventTitle extends Component {
                 </View>
                 <View style = {styles.eventTitleInputView}>
                     <TextInput
-                    placeholder="Title"
-                    placeholderTextColor = "#f5f5f5"
+                    placeholder="enter title"
                     style={styles.input}
                     autoCapitalize = 'none'
                     autoCorrect = {false}
                     value = {this.props.title}
-                    onChangeText={(title) => this.props.setTitle(title)}
+                    onChangeText={(title) => this.props.onChangeTitle(title)}
                     maxLength={32}
-                    onFocus = {this.props.hideDateKeyboard}
-                    onSubmitEditing={this.props.toggleDateKeyboard}/>
+                    onSubmitEditing={this.props.toggleDateKeyboard}
+                    onFocus = {this.props.hideDateKeyboard}/>
                     <TouchableOpacity style = {styles.clearButtonView} onPress = {this.props.clearTitle}>
                         <MaterialCommunityIcons name = "close-circle" size = {20} color = "white"/>
                     </TouchableOpacity>
@@ -74,4 +73,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default EventTitle;
+export default EditEventTitle;

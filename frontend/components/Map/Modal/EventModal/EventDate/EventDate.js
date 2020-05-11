@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 
-//packages
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-//function
-import { monthToString } from '../DateFunctions/monthToString'
-import { minuteToString } from '../DateFunctions/minuteToString';
+//functions
+import { monthToString } from '../../HostEventModal/DateFunctions/monthToString';
+import { minuteToString } from '../../HostEventModal/DateFunctions/minuteToString';
 
 class EventDate extends Component {
     constructor(props){
@@ -18,38 +16,39 @@ class EventDate extends Component {
     render(){
         return(
             <View>
-                <TouchableOpacity style ={styles.eventDateView} onPress = {this.props.toggleDateKeyboard}>
+                <View style ={styles.eventDateView}>
                     <View style = {styles.eventDateTitleView}>
                         <Text style = {styles.eventDateTitleText}>{this.props.title}</Text>
                     </View>
                     <View style = {styles.dateView}>
                         <View style = {styles.month}>
-                            <Text style = {styles.dateText}>{monthToString(this.props.chosenDate.getMonth())}</Text>
+                            <Text style = {styles.dateText}>
+                                {monthToString((new Date(this.props.chosenDate)).getMonth())}
+                            </Text>
                         </View>
                         <View style = {styles.date}>
-                            <Text style = {styles.dateText}>{this.props.chosenDate.getDate()}</Text>
+                            <Text style = {styles.dateText}>{((new Date(this.props.chosenDate)).getDate())}</Text>
                         </View>
                     </View>
                     <View style = {styles.timeView}>
                         <View style = {styles.date}>
                             <Text style = {styles.dateText}>
-                                {this.props.chosenDate.getHours>=12 ? (this.props.chosenDate.getHours())%12 : this.props.chosenDate.getHours() }
+                                {((new Date(this.props.chosenDate)).getHours())>12 ?
+                                ((new Date(this.props.chosenDate)).getHours())%12 :
+                                ((new Date(this.props.chosenDate)).getHours()) }
                             </Text>
                         </View>
                         <View style = {styles.colon}>
                             <Text style = {styles.dateText}>:</Text>
                         </View>
                         <View style = {styles.minute}>
-                            <Text style = {styles.dateText}>{minuteToString(this.props.chosenDate.getMinutes())}</Text>
+                            <Text style = {styles.dateText}>{minuteToString((new Date(this.props.chosenDate)).getMinutes())}</Text>
                         </View>
                         <View>
-                            <Text style = {styles.dateText}>{this.props.chosenDate.getHours()<12 ? "AM" : "PM"}</Text>
+                            <Text style = {styles.dateText}>{((new Date(this.props.chosenDate)).getHours())<12 ? "AM" : "PM"}</Text>
                         </View>
                     </View>
-                    <View style = {styles.downIconView}>
-                        <MaterialCommunityIcons name = "menu-down" size = {35} color = "#F5C669"/>
-                    </View>
-                </TouchableOpacity>
+                </View>
             </View>
         )
     }
@@ -71,6 +70,7 @@ const styles = StyleSheet.create({
     },
     eventDateTitleText:{
         textAlign: "center",
+        fontWeight: "400",
     },
     dateView:{
         flex: 1,
@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
     dateText:{
         padding: 5,
         fontSize: 15,
+        fontWeight: "400",
     },
     timeView:{
         justifyContent: "center",
@@ -88,10 +89,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         padding: 5,
     },
-    downIconView:{
-        flex: 0.5,
-        alignItems: "flex-end",
-    }
 });
 
 export default EventDate;

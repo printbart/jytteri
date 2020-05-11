@@ -89,7 +89,8 @@ class HostEventModal extends Component {
                     title = {this.state.title}
                     setTitle = {this.setTitle}
                     clearTitle = {this.clearTitle}
-                    hideDateKeyboard = {this.hideDateKeyboard}/>
+                    hideDateKeyboard = {this.hideDateKeyboard}
+                    toggleDateKeyboard = {this.toggleStartDateKeyboard}/>
                     <EventDate
                         title = "Start time"
                         chosenDate = {this.state.chosenStartDate}
@@ -108,12 +109,12 @@ class HostEventModal extends Component {
                 <DateKeyboard
                     chosenDate = {this.state.chosenStartDate}
                     setDate = {this.setStartDate}
-                    toggleDateKeyboard = {this.toggleStartDateKeyboard}/>}
+                    toggleNextKeyboard = {this.toggleEndDateKeyboard}/>}
                 {this.state.endDateKeyboardOpen &&
                 <DateKeyboard
                     chosenDate = {this.state.chosenEndDate}
                     setDate = {this.setEndDate}
-                    toggleDateKeyboard = {this.toggleEndDateKeyboard}/>}
+                    toggleNextKeyboard = {this.toggleEndDateKeyboard}/>}
             </Modal>
         )
     }

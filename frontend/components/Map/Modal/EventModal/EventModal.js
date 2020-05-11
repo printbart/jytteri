@@ -1,41 +1,31 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Modal, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, Modal, Alert } from 'react-native';
 
 //packages
 import AsyncStorage from '@react-native-community/async-storage';
 
 //components
-import CloseModalButton from '../ModalComponents/CloseModalButton/CloseModalButton';
-import EventInfo from './EventInfo/EventInfo';
+import EventHeader from './EventHeader/EventHeader';
+import EventTitle from './EventTitle/EventTitle';
+import EventDate from './EventDate/EventDate';
+import EventHost from './EventHost/EventHost';
+import EventGuest from './EventGuest/EventGuest';
+import LeaveButton from './LeaveButton/LeaveButton';
+
+//modal
+import EditEventModal from './EditEventModal/EditEventModal';
 
 class EventModal extends Component {
     constructor(props){
         super(props);
         this.state = {
+            editEventModalVisible: false
         }
-    }
-
-    //set title of the event
-    setTitle = () => {
-        this.setState({title: this.props.currentEventItem.eventName});
-    }
-
-    //clear title input
-    clearTitle = () => {
-        this.setState({title: ""});
     }
 
     //close search modal
     closeEventModal = () => {
         this.props.toggleEventModal(false);
-    }
-
-    //save event
-    saveEvent = () => {
-        this.closeEventModal(); //close event modal
-        const changedEventItem = JSON.parse(JSON.stringify(this.props.currentEventItem)); //make event data mutable
-        changedEventItem.eventName = this.state.title; //set changed title
-        this.props.editEventInfo(changedEventItem)
     }
 
     //leave event
@@ -61,33 +51,43 @@ class EventModal extends Component {
         await this.closeEventModal(); //close event modal
     }
 
+    //toggle edit event modal visible
+    editEventModalToggle = () => {
+        this.setState({editEventModalVisible: !this.state.editEventModalVisible})
+    }
+
     render(){
         return(
             <Modal
             visible={this.props.eventModalState}
             animationType="slide">
+                {this.props.currentEventItem &&
                 <View style = {styles.eventModalView}>
-                    <View style = {styles.eventModalHeaderView}>
-                        <View style = {{flex: 1,}}>
-                            <CloseModalButton 
-                                closeModal={this.closeEventModal}/>
-                        </View>
-                        <View style = {styles.eventTitleView}>
-                            <Text style = {styles.eventTitleText}>Event</Text>
-                        </View>
-                        <TouchableOpacity style = {styles.eventSaveView} onPress = {this.saveEvent}>
-                            <Text style = {styles.eventSaveText}>Save</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <EventInfo
-                        title = {this.state.title}
-                        eventItem = {this.props.currentEventItem}
-                        onChangeTitle={(title) => this.setState({title: title})}
-                        setTitle = {this.setTitle}
-                        clearTitle = {this.clearTitle}
-                        leaveEvent = {this.leaveEventType}
+                    <EditEventModal //edit event modal
+                        editEventModalVisible = {this.state.editEventModalVisible} //toggle editmodal state
+                        editEventModalToggle = {this.editEventModalToggle} // toggle editmodal
+                        editEventInfo = {this.props.editEventInfo} //edit data globally
+                        currentEventItem = {this.props.currentEventItem} //get current event item
+                        editEvent = {this.editEvent} //edit data on modal data
                         />
-                </View>
+                    <EventHeader 
+                        editEventToggle = {this.editEventModalToggle}
+                        closeEventModal = {this.closeEventModal}/>
+                    <EventTitle
+                        title = {this.props.currentEventItem.eventName}/>
+                    <EventDate
+                        title = "Start time"
+                        chosenDate = {this.props.currentEventItem.startDate}/>
+                    <EventDate
+                        title = "End time"
+                        chosenDate = {this.props.currentEventItem.endDate}/>
+                    <EventHost
+                        hostName = {this.props.currentEventItem.hostName}/>
+                    <EventGuest
+                        guests = {this.props.currentEventItem.guests}/>
+                    <LeaveButton
+                        leaveEvent = {this.leaveEventType}/>
+                </View>}
             </Modal>
         )
     }
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     },
     eventSaveText: {
         fontSize: 15,
-        color: "grey",
+        color: "white",
     }
 });
 

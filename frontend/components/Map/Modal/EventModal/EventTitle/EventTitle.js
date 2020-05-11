@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
-
-//packages
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { StyleSheet, View, Text } from 'react-native';
 
 class EventTitle extends Component {
     constructor(props){
@@ -17,21 +14,8 @@ class EventTitle extends Component {
                 <View style = {styles.eventHeaderView}>
                     <Text style = {styles.eventInfoText}>Title</Text>
                 </View>
-                <View style = {styles.eventTitleInputView}>
-                    <TextInput
-                    placeholder="Title"
-                    placeholderTextColor = "#f5f5f5"
-                    style={styles.input}
-                    autoCapitalize = 'none'
-                    autoCorrect = {false}
-                    value = {this.props.title}
-                    onChangeText={(title) => this.props.setTitle(title)}
-                    maxLength={32}
-                    onFocus = {this.props.hideDateKeyboard}
-                    onSubmitEditing={this.props.toggleDateKeyboard}/>
-                    <TouchableOpacity style = {styles.clearButtonView} onPress = {this.props.clearTitle}>
-                        <MaterialCommunityIcons name = "close-circle" size = {20} color = "white"/>
-                    </TouchableOpacity>
+                <View style = {styles.eventTitle}>
+                    <Text style ={styles.eventTitleText}>{this.props.title}</Text>
                 </View>
             </View>
         )
@@ -53,24 +37,24 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 5,
     },
-    eventTitleInputView: {
+    eventTitle: {
         flexDirection: 'row',
         flex: 5,
+        alignItems: 'center',
     },
     eventInfoText: {
         fontSize: 15,
-        fontWeight: "bold",
+        fontFamily: 'Helvetica Neue',
         color: "white",
+        fontWeight: "bold",
+        fontSize: 15,
     },
-    input: {
+    eventTitleText: {
         flex: 1,
         fontFamily: 'Helvetica Neue',
         color: "white",
         fontWeight: "500",
         fontSize: 15,
-    },
-    clearButtonView: {
-        justifyContent: 'center',
     },
 });
 

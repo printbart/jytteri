@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
-//packages
+
+//icons
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-//function
-import { monthToString } from '../DateFunctions/monthToString'
-import { minuteToString } from '../DateFunctions/minuteToString';
+//functions
+import { monthToString } from '../../../HostEventModal/DateFunctions/monthToString';
+import { minuteToString } from '../../../HostEventModal/DateFunctions/minuteToString';
 
-class EventDate extends Component {
+class EditEventDate extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -24,30 +25,40 @@ class EventDate extends Component {
                     </View>
                     <View style = {styles.dateView}>
                         <View style = {styles.month}>
-                            <Text style = {styles.dateText}>{monthToString(this.props.chosenDate.getMonth())}</Text>
+                            <Text style = {styles.dateText}>
+                                {monthToString((new Date(this.props.chosenDate)).getMonth())}
+                            </Text>
                         </View>
                         <View style = {styles.date}>
-                            <Text style = {styles.dateText}>{this.props.chosenDate.getDate()}</Text>
+                            <Text style = {styles.dateText}>
+                                {((new Date(this.props.chosenDate)).getDate())}
+                            </Text>
                         </View>
                     </View>
                     <View style = {styles.timeView}>
                         <View style = {styles.date}>
                             <Text style = {styles.dateText}>
-                                {this.props.chosenDate.getHours>=12 ? (this.props.chosenDate.getHours())%12 : this.props.chosenDate.getHours() }
+                                {((new Date(this.props.chosenDate)).getHours()) > 12 ? //13+ hours
+                                ((new Date(this.props.chosenDate)).getHours()) % 12 :
+                                ((new Date(this.props.chosenDate)).getHours()) }
                             </Text>
                         </View>
                         <View style = {styles.colon}>
                             <Text style = {styles.dateText}>:</Text>
                         </View>
                         <View style = {styles.minute}>
-                            <Text style = {styles.dateText}>{minuteToString(this.props.chosenDate.getMinutes())}</Text>
+                            <Text style = {styles.dateText}>
+                                {minuteToString((new Date(this.props.chosenDate)).getMinutes())}
+                            </Text>
                         </View>
                         <View>
-                            <Text style = {styles.dateText}>{this.props.chosenDate.getHours()<12 ? "AM" : "PM"}</Text>
+                            <Text style = {styles.dateText}>
+                                {((new Date(this.props.chosenDate)).getHours())<12 ? "AM" : "PM"}
+                            </Text>
                         </View>
                     </View>
                     <View style = {styles.downIconView}>
-                        <MaterialCommunityIcons name = "menu-down" size = {35} color = "#F5C669"/>
+                        <MaterialCommunityIcons name = "menu-down" size = {35} color = "#F9A908"/>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -94,4 +105,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default EventDate;
+export default EditEventDate;

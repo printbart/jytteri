@@ -14,11 +14,11 @@ class DateKeyboard extends Component {
     render(){
         return(
             <View style = {styles.dateKeyboardView}>
-                <TouchableOpacity style = {styles.dateKeyboardHeaderView}>
-                    <Text style = {styles.dateKeyboardHeaderText} onPress = {this.props.toggleDateKeyboard}>Enter</Text>
-                </TouchableOpacity>
+                <View style = {styles.dateKeyboardHeaderView}>
+                    <Text style = {styles.dateKeyboardHeaderText} onPress = {this.props.toggleNextKeyboard}>Enter</Text>
+                </View>
                 <DatePicker
-                    date={this.props.chosenDate}
+                    date={new Date(this.props.chosenDate)}
                     onDateChange={this.props.setDate}
                     style={{ width: 415, height: 170 }}
                     timeZoneOffsetInMinutes = {-4*60}

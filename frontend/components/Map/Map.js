@@ -119,7 +119,7 @@ class Map extends Component {
 
   //edit event info
   editEventInfo = (item) => {
-    const event = item; //user searched location position
+    let event = item; //user searched location position
     var request = new Request('http://localhost:5000/api/editEventInfo', {
       method: 'POST',
       headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),
@@ -134,7 +134,7 @@ class Map extends Component {
               myMarker.events[i] = event;
             }
           }
-          this.setState({myMarker : myMarker});
+          this.setState({myMarker : myMarker, currentEventItem: event});
         }
       });
     }).catch(function(err){
@@ -144,9 +144,6 @@ class Map extends Component {
 
   //save event info when done hosting
   saveEventInfo = (eventName, startDate, endDate) => {
-    let info = {
-      eventName, startDate, endDate
-    };
     let myMarker =  JSON.parse(JSON.stringify(this.state.myMarker));
     myMarker['eventName'] = eventName;
     myMarker['startDate'] = startDate;
@@ -220,7 +217,7 @@ class Map extends Component {
   searchLocation = async(item) => {
     this.setState({myMarker: null});
   
-    const location = {
+    let location = {
       // search modal data or onPressMarker data
       locationID: item.place_id ? item.place_id : item.locationID,
       hostID: await AsyncStorage.getItem('userID'),
@@ -231,7 +228,6 @@ class Map extends Component {
       latitudeDelta: 0.09,
       longitudeDelta: 0.035,
     };
-    console.log(location);
 
     var request = new Request('http://localhost:5000/api/searchLocationEvents', {
       method: 'POST',
@@ -354,7 +350,8 @@ class Map extends Component {
               onPress={this.onPressMarker.bind(this, this.state.myMarker)}
               pinColor = {"#000000"}
               zIndex = {-1}>
-                <FontistoIcon name="flag" size = {40} color = "#C23B22" style = {styles.myMarker}/>
+                <View style = {styles.myMarker}>
+                </View>
             </Marker>
           }
           {this.state.events.map((event) => { //all the events marker
@@ -366,7 +363,7 @@ class Map extends Component {
                 pinColor = {"#123456"}>
                   <Image
                     source = {JytteriLogo}
-                    style = {styles.eventMarker}/>
+                    style = {[styles.eventMarker,event.startDate <= new Date() &&{opacity: 0.5} ]}/>
               </Marker>
             )
           })}
@@ -397,7 +394,11 @@ const styles = StyleSheet.create({
     height: 25,
   },
   myMarker:{
-    opacity: 0.75,
+    width: 50,
+    height: 50,
+    borderWidth: 1,
+    borderRadius: 50,
+    borderColor: "#F9A908",
   }
 });
 
