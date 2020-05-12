@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 //components
 import SearchModal from './Modal/SearchModal/SearchModal';
 import LocateMeButton from './LocateMeButton/LocateMeButton';
+import BackButton from './BackButton/BackButton';
 import Menu from './Menu/Menu';
 import EventModal from './Modal/EventModal/EventModal';
 import HostEventModal from './Modal/HostEventModal/HostEventModal';
@@ -63,6 +64,12 @@ class Map extends Component {
   //focus on the marker when pressed
   onPressMarker(input){
     this.searchLocation(input);
+  }
+
+  //go back to main page in map
+  goBack = () => {
+    this.centerMyLocation();
+    this.setState({myMarker: null});
   }
 
   //center your current location
@@ -370,6 +377,9 @@ class Map extends Component {
         </MapView>
         <LocateMeButton 
           centerMyLocation = {this.centerMyLocation}/>
+        {this.state.myMarker  &&
+          <BackButton
+            goBack = {this.goBack}/>}
         <Menu 
           toggleSearchModal = {this.toggleSearchModal}
           myMarker = {this.state.myMarker}

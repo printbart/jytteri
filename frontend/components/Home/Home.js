@@ -51,16 +51,19 @@ class Home extends Component {
 
     render(){
         return(
-            <View style ={styles.homeView}>
-                <Header
-                    userInfo={this.state.userInfo}/>
-                <UserInfo
-                    userInfo = {this.state.userInfo}/>
-                <UserEventInfo
-                    userInfo = {this.state.userInfo}/>
-                <TouchableOpacity style = {styles.logoutBtn} onPress = {this.onPressLogout}>
-                    <Text style = {styles.logoutText}>Logout</Text>
-                </TouchableOpacity>
+            <View style ={{flex: 1,}}>
+                {this.state.userInfo &&
+                <View style ={styles.homeView}>
+                    <Header
+                        userInfo={this.state.userInfo}/>
+                    <UserInfo
+                        userInfo = {this.state.userInfo}/>
+                    <UserEventInfo
+                        userInfo = {this.state.userInfo}/>
+                    <TouchableOpacity style = {styles.logoutBtn} onPress = {this.onPressLogout}>
+                        <Text style = {styles.logoutText}>Logout</Text>
+                    </TouchableOpacity>
+                </View>}
             </View>
         )
     }
@@ -77,8 +80,9 @@ const styles = StyleSheet.create({
         margin: 10,
         padding: 10,
         alignItems: 'center',
-        backgroundColor: "#3C3C3D",
+        backgroundColor: "#F9A908",
         borderRadius: 10,
+        opacity: 0.5,
     },
     logoutText:{
         color: "white",

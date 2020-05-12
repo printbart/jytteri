@@ -22,16 +22,17 @@ class UserInfo extends Component {
                 </View>
                 <View style = {styles.nameView}>
                     <View style = {styles.firstnameView}>
-                        <Text>Firstname</Text>
+                        <Text style = {styles.nameText}>{ this.props.userInfo.firstname }</Text>
                     </View>
                     <View style = {styles.lastnameView}>
-                        <Text>LastName</Text>
+                        <Text style = {styles.nameText}>{ this.props.userInfo.lastname }</Text>
                     </View>
                 </View>
             </View>
         )
     }
 }
+
 const styles = StyleSheet.create({
     userInfoView: {
        flex: 1,
@@ -59,6 +60,11 @@ const styles = StyleSheet.create({
     },
     lastnameView:{
         padding: 10,
+    },
+    nameText:{
+        fontSize: 20,
+        fontWeight: "500",
+        fontFamily: 'Helvetica Neue',
     }
 });
 

@@ -287,7 +287,7 @@ def getUserInfo():
     userID = request.get_json()['userID']
 
     #SQL
-    cur.execute("SELECT u.userID, u.username, "+
+    cur.execute("SELECT u.userID, u.username, u.firstname, u.lastname, " +
     "e.locationName AS hostEventName, e.locationAddress AS hostEventAddress, " +
     "g.locationName AS guestEventName, g.locationAddress AS guestEventAddress " +
     "FROM users u " +
@@ -305,10 +305,12 @@ def getUserInfo():
         output.append({
             "userID": data[0][0],
             "username": data[0][1],
-            "hostEventName": data[0][2],
-            "hostEventAddress": data[0][3],
-            "guestEventName": data[0][4],
-            "guestEventAddress": data[0][5],
+            "firstname": data[0][2],
+            "lastname": data[0][3],
+            "hostEventName": data[0][4],
+            "hostEventAddress": data[0][5],
+            "guestEventName": data[0][6],
+            "guestEventAddress": data[0][7],
         })
     return jsonify(output)
 
