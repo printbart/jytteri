@@ -37,9 +37,9 @@ class MenuContent extends Component {
         return(
         <TouchableOpacity style = {styles.eventView} onPress = {this.onPressOpenEventModal.bind(this, item)}>
             <View style = {styles.conditionView}>
-                    <Image
-                        source = {JytteriLogo}
-                        style = {[styles.logo, (item.startDate - new Date())<0 && {opacity: 0.3}]}/>
+                <Image
+                    source = {JytteriLogo}
+                    style = {[styles.logo, (item.startDate - new Date())<0 && {opacity: 0.3}]}/>
             </View>
             <View style = {styles.eventTitleView}>
                 <View>

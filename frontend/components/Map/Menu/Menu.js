@@ -4,7 +4,7 @@ import OpenModalButton from './OpenModalButton/OpenModalButton';
 
 //components
 import MenuContent from './MenuContent/MenuContent';
-import MenuNotice from './MenuContent/MenuNotice';
+import MenuHome from './MenuContent/MenuHome';
 
 class Menu extends Component {
     constructor(props){
@@ -39,7 +39,7 @@ class Menu extends Component {
                         openEventModal = {this.openEventModal}
                         openHostEventModal = {this.openHostEventModal}
                         joinEvent = {this.props.joinEvent}/> :
-                    <MenuNotice />
+                    <MenuHome />
                 }
             </View>
         )

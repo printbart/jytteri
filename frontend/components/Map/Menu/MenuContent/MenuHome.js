@@ -1,16 +1,22 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
-class MenuNotice extends Component {
+//component
+import HostList from './HostList/HostList';
+import GuestList from './GuestList/GuestList';
+
+class MenuHome extends Component {
     constructor(props){
         super(props);
         this.state = {
         }
     }
+
     render(){
         return(
             <View style = {styles.noticeView}>
-                <Text style = {styles.noticeText}>Find a location</Text>
+                <HostList />
+                <GuestList />
             </View>
         )
     }
@@ -18,8 +24,6 @@ class MenuNotice extends Component {
 const styles = StyleSheet.create({
     noticeView: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     noticeText: {
         fontSize: 30,
@@ -28,4 +32,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default MenuNotice;
+export default MenuHome;

@@ -314,6 +314,71 @@ def getUserInfo():
         })
     return jsonify(output)
 
+#get all the events that user hosted
+@app.route('/api/getUserHostEvents', methods=['POST'])
+def getUserHostEvents():
+    #input values
+    cur = mysql.connection.cursor()
+    userID = request.get_json()['userID']
+
+    #SQL
+    cur.execute("SELECT * FROM Events WHERE "+
+    "hostID = " + str(userID))
+
+    mysql.connection.commit()
+    data = cur.fetchall()
+
+    #formatting data into json
+    output = [] #new array to store our formatted data
+    if data:
+        for i in range(len(data)):
+            output.append({
+                "eventID": data[i][0],
+                "hostID": data[i][1],
+                "eventName": data[i][2],
+                "locationID": data[i][3],
+                "locationName": data[i][4],
+                "locationAddress": data[i][5],
+                "longitude": data[i][6],
+                "latitude": data[i][7],
+                "startDate": data[i][8],
+                "endDate": data[i][9],
+            })
+    return jsonify(output)
+
+#get all the events that user hosted
+@app.route('/api/getUserGuestEvents', methods=['POST'])
+def getUserGuestEvents():
+    #input values
+    cur = mysql.connection.cursor()
+    userID = request.get_json()['userID']
+
+    #SQL
+    cur.execute("SELECT e.*, a.userID FROM Events e INNER JOIN Attend a  ON e.eventID = a.eventID WHERE "+
+    "a.userID = " + str(userID))
+
+    mysql.connection.commit()
+    data = cur.fetchall()
+
+    #formatting data into json
+    output = [] #new array to store our formatted data
+    if data:
+        for i in range(len(data)):
+            output.append({
+                "eventID": data[i][0],
+                "hostID": data[i][1],
+                "eventName": data[i][2],
+                "locationID": data[i][3],
+                "locationName": data[i][4],
+                "locationAddress": data[i][5],
+                "longitude": data[i][6],
+                "latitude": data[i][7],
+                "startDate": data[i][8],
+                "endDate": data[i][9],
+                "userID": data[i][10],
+            })
+    return jsonify(output)
+
 
 #main
 if __name__ == '__main__':
