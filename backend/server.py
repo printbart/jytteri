@@ -322,8 +322,10 @@ def getUserHostEvents():
     userID = request.get_json()['userID']
 
     #SQL
-    cur.execute("SELECT * FROM Events WHERE "+
-    "hostID = " + str(userID))
+    cur.execute("SELECT e.*, COUNT(a.userID) AS guestCount FROM Events e " +
+    "LEFT JOIN Attend a ON e.eventID = a.eventID " +
+    "WHERE " +
+    "e.hostID = " + str(userID) + " GROUP BY e.eventID")
 
     mysql.connection.commit()
     data = cur.fetchall()
@@ -343,6 +345,7 @@ def getUserHostEvents():
                 "latitude": data[i][7],
                 "startDate": data[i][8],
                 "endDate": data[i][9],
+                "guestCount": data[i][10],
             })
     return jsonify(output)
 
@@ -354,7 +357,7 @@ def getUserGuestEvents():
     userID = request.get_json()['userID']
 
     #SQL
-    cur.execute("SELECT e.*, a.userID FROM Events e INNER JOIN Attend a  ON e.eventID = a.eventID WHERE "+
+    cur.execute("SELECT e.*, COUNT(a.userID) AS guestCount FROM Events e INNER JOIN Attend a  ON e.eventID = a.eventID WHERE "+
     "a.userID = " + str(userID))
 
     mysql.connection.commit()
@@ -375,7 +378,7 @@ def getUserGuestEvents():
                 "latitude": data[i][7],
                 "startDate": data[i][8],
                 "endDate": data[i][9],
-                "userID": data[i][10],
+                "guestCount": data[i][10],
             })
     return jsonify(output)
 

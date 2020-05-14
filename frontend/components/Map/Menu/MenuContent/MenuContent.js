@@ -124,7 +124,6 @@ const styles = StyleSheet.create({
         fontWeight: "300",
         fontFamily: 'Helvetica Neue',
         color: "#3C3C3D",
-        padding: 5,
     },
     eventPopulationView:{
         width: 50,

@@ -39,7 +39,9 @@ class Menu extends Component {
                         openEventModal = {this.openEventModal}
                         openHostEventModal = {this.openHostEventModal}
                         joinEvent = {this.props.joinEvent}/> :
-                    <MenuHome />
+                    <MenuHome
+                    openEventModal = {this.openEventModal}
+                    searchLocation = {this.props.searchLocation}/>
                 }
             </View>
         )

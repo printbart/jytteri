@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, ScrollView } from 'react-native';
 
 //component
 import HostList from './HostList/HostList';
@@ -14,10 +14,15 @@ class MenuHome extends Component {
 
     render(){
         return(
-            <View style = {styles.noticeView}>
-                <HostList />
-                <GuestList />
-            </View>
+            <ScrollView style = {styles.noticeView}>
+                <Text style = {styles.notice}>Find a location</Text>
+                <HostList
+                    openEventModal = {this.props.openEventModal}
+                    searchLocation = {this.props.searchLocation}/>
+                <GuestList
+                    openEventModal = {this.props.openEventModal}
+                    searchLocation = {this.props.searchLocation}/>
+            </ScrollView>
         )
     }
 }
@@ -25,8 +30,10 @@ const styles = StyleSheet.create({
     noticeView: {
         flex: 1,
     },
-    noticeText: {
+    notice: {
         fontSize: 30,
+        textAlign: "center",
+        padding: 10,
         fontWeight: "200",
         fontFamily: 'Helvetica Neue',
     },

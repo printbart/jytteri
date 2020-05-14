@@ -386,7 +386,8 @@ class Map extends Component {
           storeLocation = {this.storeLocation}
           toggleEventModal = {this.toggleEventModal}
           toggleHostEventModal = {this.toggleHostEventModal}
-          joinEvent = {this.joinEvent}/>
+          joinEvent = {this.joinEvent}
+          searchLocation = {this.searchLocation}/>
       </View>
     );
   }
