@@ -4,10 +4,27 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 //packages
 import AsyncStorage from '@react-native-community/async-storage';
 
+//redux
+import { connect } from 'react-redux';
+import {setProfileData} from './Redux/Actions/profile';
+
 //components
 import Header from './Header/Header';
 import UserInfo from './UserInfo/UserInfo';
-import UserEventInfo from './UserEventInfo/UserEventInfo';
+
+//redux get state
+const mapStateToProps = (state) => {
+    return{
+        data: state.data.profileData
+    }
+}
+
+//redux set dispatch
+const mapDispatchToProps = (dispatch) => {
+    return {
+        set: (data) => dispatch(setProfileData(data))
+    }
+}
 
 class Profile extends Component {
     constructor(props){
@@ -48,6 +65,7 @@ class Profile extends Component {
         fetch(request).then((response) => {
             response.json().then((data) => {
                 this.setState({userInfo: data[0]})
+                this.props.set(data[0]);
             });
         }).catch(function(err){
             console.log(err);
@@ -63,8 +81,6 @@ class Profile extends Component {
                         userInfo={this.state.userInfo}
                         editProfile = {this.editProfile}/>
                     <UserInfo
-                        userInfo = {this.state.userInfo}/>
-                    <UserEventInfo
                         userInfo = {this.state.userInfo}/>
                     <TouchableOpacity style = {styles.logoutBtn} onPress = {this.onPressLogout}>
                         <Text style = {styles.logoutText}>Logout</Text>
@@ -97,4 +113,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Profile;
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

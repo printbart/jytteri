@@ -4,6 +4,15 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 //libraries
 import FontistoIcon from 'react-native-vector-icons/Fontisto';
 
+//redux
+import { connect } from 'react-redux';
+
+const mapStateToProps = (state) => {
+    return {
+        profileData: state.data.profileData
+    }
+}
+
 class EditProfileInfo extends Component {
     constructor(props){
         super(props);
@@ -20,7 +29,7 @@ class EditProfileInfo extends Component {
                     </View>
                     <View style = {styles.nameView}>
                         <View style = {styles.firstNameView}>
-                            <Text style = {styles.nameText}>Firstname</Text>
+                            <Text style = {styles.nameText}>{this.props.profileData.firstname}</Text>
                         </View>
                     </View>
                     <View style = {styles.rightIconView}>
@@ -33,7 +42,7 @@ class EditProfileInfo extends Component {
                     </View>
                     <View style = {styles.nameView}>
                         <View style = {styles.firstNameView}>
-                            <Text style = {styles.nameText}>Lastname</Text>
+                            <Text style = {styles.nameText}>{this.props.profileData.lastname}</Text>
                         </View>
                     </View>
                     <View style = {styles.rightIconView}>
@@ -79,4 +88,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default EditProfileInfo;
+export default  connect(mapStateToProps)(EditProfileInfo);

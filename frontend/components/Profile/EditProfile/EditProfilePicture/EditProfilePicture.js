@@ -24,7 +24,6 @@ class EditProfilePicture extends Component {
     }
 
     render(){
-        console.log(this.state.photo)
         return(
             <View style = {styles.editProfilePictureView}>
                 <TouchableOpacity style = {styles.defaultProfilePictureView}>

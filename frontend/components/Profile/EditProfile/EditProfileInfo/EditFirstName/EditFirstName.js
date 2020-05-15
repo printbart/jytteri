@@ -16,7 +16,7 @@ class EditFirstName extends Component {
                     <Text style = {styles.doneButtonText}>Done</Text>
                 </TouchableOpacity>
             )
-        })
+        });
     }
 
     render(){
