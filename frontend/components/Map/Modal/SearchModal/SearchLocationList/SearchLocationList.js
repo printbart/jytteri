@@ -16,15 +16,17 @@ class SearchLocationList extends Component {
         return(
           <TouchableOpacity style = {styles.searchLocationView} onPress = {this.onPressLocation.bind(this, item)}>
             <View style = {styles.searchLocationIconView}>
-              <Image source={{uri: item.icon}} style = {styles.searchLocationIconImage}/>
+                <View style = {styles.searchLocationIconBackground}>
+                    <Image source={{uri: item.icon}} style = {styles.searchLocationIconImage}/>
+                </View>
             </View>
             <View style = {styles.searchLocationBodyView}>
-              <View style = {styles.searchLocationNameView}>
-                <Text style = {styles.searchLocationNameText}>{item.name}</Text>
-              </View>
-              <View style = {styles.searchLocationAddressView}>
-                <Text style = {styles.searchLocationAddressText}>{item.formatted_address}</Text>
-              </View>
+                <View style = {styles.searchLocationNameView}>
+                    <Text style = {styles.searchLocationNameText}>{item.name}</Text>
+                </View>
+                <View style = {styles.searchLocationAddressView}>
+                    <Text style = {styles.searchLocationAddressText}>{item.formatted_address}</Text>
+                </View>
             </View>
           </TouchableOpacity>
         )
@@ -42,18 +44,28 @@ class SearchLocationList extends Component {
 const styles = StyleSheet.create({
     searchLocationView:{
         flexDirection: 'row',
-        borderBottomColor: "lightgrey",
-        borderBottomWidth: 0.5,
+        paddingRight: 50,
+        paddingLeft: 5,
     },
     searchLocationIconView:{
         padding: 5,
         justifyContent: 'center',
         alignItems: 'center',
     },
+    searchLocationIconBackground:{
+        backgroundColor: "#F9A908",
+        padding: 5,
+        width: 40,
+        height: 40,
+        justifyContent: "center",
+        alignItems: "flex-end",
+        borderRadius: 50,
+    },
     searchLocationIconImage:{
         width: 25,
         height: 25,
         marginRight: 5,
+        tintColor:'white',
     },
     searchLocationBodyView:{
         flexDirection: 'column',
@@ -67,6 +79,7 @@ const styles = StyleSheet.create({
     },
     searchLocationAddressView: {
         padding: 5,
+        paddingTop: 0,
     },
     searchLocationAddressText: {
         fontSize: 15,

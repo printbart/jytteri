@@ -5,7 +5,6 @@ import { StyleSheet, View, Platform, Alert, Image } from 'react-native';
 import { request, PERMISSIONS } from 'react-native-permissions';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-import FontistoIcon from 'react-native-vector-icons/Fontisto';
 import AsyncStorage from '@react-native-community/async-storage';
 
 //components

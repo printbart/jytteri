@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     addLocationButtonView:{
         width: "100%",
         alignItems: 'center',
-        backgroundColor: "#f9a908",
+        backgroundColor: "#F9A908",
         margin: 5,
         padding: 5,
         borderRadius: 10,

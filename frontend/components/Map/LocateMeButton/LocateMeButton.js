@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         justifyContent: 'center',
         alignItems: 'center',
+        opacity: 0.9,
         shadowColor: "#3C3C3D",
         shadowRadius: 7.5,
         shadowOpacity: 0.5,

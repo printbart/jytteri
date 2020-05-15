@@ -9,7 +9,7 @@ import Header from './Header/Header';
 import UserInfo from './UserInfo/UserInfo';
 import UserEventInfo from './UserEventInfo/UserEventInfo';
 
-class Home extends Component {
+class Profile extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -18,6 +18,11 @@ class Home extends Component {
 
     componentDidMount(){
         this.getUserInfo();
+    }
+
+    //edit profile
+    editProfile = () =>{
+        this.props.navigation.navigate("editprofile");
     }
 
     //logout
@@ -55,7 +60,8 @@ class Home extends Component {
                 {this.state.userInfo &&
                 <View style ={styles.homeView}>
                     <Header
-                        userInfo={this.state.userInfo}/>
+                        userInfo={this.state.userInfo}
+                        editProfile = {this.editProfile}/>
                     <UserInfo
                         userInfo = {this.state.userInfo}/>
                     <UserEventInfo
@@ -91,4 +97,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Home;
+export default Profile;
