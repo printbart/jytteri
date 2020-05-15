@@ -49,7 +49,7 @@ class Profile extends Component {
             await this.props.navigation.navigate("authentication"); //navigate to authenitcation page
         }
         catch (err){
-        console.log(err);
+            console.log(err);
         }
     }
 
@@ -64,7 +64,6 @@ class Profile extends Component {
         });
         fetch(request).then((response) => {
             response.json().then((data) => {
-                this.setState({userInfo: data[0]})
                 this.props.set(data[0]);
             });
         }).catch(function(err){
@@ -75,17 +74,14 @@ class Profile extends Component {
     render(){
         return(
             <View style ={{flex: 1,}}>
-                {this.state.userInfo &&
                 <View style ={styles.homeView}>
                     <Header
-                        userInfo={this.state.userInfo}
                         editProfile = {this.editProfile}/>
-                    <UserInfo
-                        userInfo = {this.state.userInfo}/>
+                    <UserInfo/>
                     <TouchableOpacity style = {styles.logoutBtn} onPress = {this.onPressLogout}>
                         <Text style = {styles.logoutText}>Logout</Text>
                     </TouchableOpacity>
-                </View>}
+                </View>
             </View>
         )
     }

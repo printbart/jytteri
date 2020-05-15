@@ -1,6 +1,23 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 
+//redux
+import { connect } from 'react-redux';
+import {setProfileData} from '../../../Redux/Actions/profile';
+
+const mapStateToProps = (state) => {
+    return {
+        profileData: state.data.profileData
+    }
+}
+
+//redux set dispatch
+const mapDispatchToProps = (dispatch) => {
+    return {
+        set: (data) => dispatch(setProfileData(data))
+    }
+}
+
 class EditFirstName extends Component {
     constructor(props){
         super(props);
@@ -8,14 +25,37 @@ class EditFirstName extends Component {
         }
         this.setHeader();
     }
+    componentDidMount(){
+        this.setState({firstnameValue: this.props.profileData.firstname});
+    }
 
     setHeader(){
         this.props.navigation.setOptions({
             headerRight: () => (
-                <TouchableOpacity style = {styles.doneButtonView}>
+                <TouchableOpacity style = {styles.doneButtonView} onPress = {this.editFirstName}>
                     <Text style = {styles.doneButtonText}>Done</Text>
                 </TouchableOpacity>
             )
+        });
+    }
+
+    editFirstName = () => {
+        const info = {
+            userID: this.props.profileData.userID,
+            firstname: this.state.firstnameValue,
+        };
+        var request = new Request('http://localhost:5000/api/editFirstname', {
+            method: 'POST',
+            headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),
+            body: JSON.stringify(info)
+        });
+        fetch(request).then((response) => {
+            response.json().then((data) => {
+                this.props.set(data[0]);
+                this.props.navigation.goBack(null);
+            });
+        }).catch(function(err){
+            console.log(err);
         });
     }
 
@@ -30,7 +70,8 @@ class EditFirstName extends Component {
                         <TextInput
                             placeholder="Name"
                             style={styles.nameInputs}
-                            onChangeText={(username) => this.setState({usernameValue: username})}
+                            value = {this.state.firstnameValue}
+                            onChangeText={(firstname) => this.setState({firstnameValue: firstname})}
                             maxLength={16}
                             autoCorrect={false}
                             />
@@ -71,4 +112,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default EditFirstName;
+export default connect(mapStateToProps, mapDispatchToProps)(EditFirstName);

@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
+//redux
+import { connect } from 'react-redux';
+
+const mapStateToProps = (state) => {
+    return {
+        profileData: state.data.profileData
+    }
+}
+
 class Header extends Component {
     constructor(props){
         super(props);
@@ -9,13 +18,14 @@ class Header extends Component {
     }
 
     render(){
+        console.log(this.props);
         return(
             <View style ={styles.headerView}>
                 <View style = {{flex: 1,}}>
 
                 </View>
                 <View style = {styles.usernameView}>
-                    <Text style  = {styles.usernameText}>{this.props.userInfo ? this.props.userInfo.username : null}</Text>
+                    <Text style  = {styles.usernameText}>{this.props.profileData.username}</Text>
                 </View>
                 <TouchableOpacity style = {styles.editView} onPress = {this.props.editProfile}>
                     <Text style = {styles.editText}>Edit</Text>
@@ -55,4 +65,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Header;
+export default connect(mapStateToProps)(Header);

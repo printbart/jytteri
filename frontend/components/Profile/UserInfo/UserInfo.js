@@ -4,6 +4,16 @@ import { StyleSheet, View, Image, Text } from 'react-native';
 //images
 import defaultProfilePicture from '../../../Images/defaultProfilePicture.png';
 
+//redux
+import { connect } from 'react-redux';
+
+const mapStateToProps = (state) => {
+    return {
+        profileData: state.data.profileData
+    }
+}
+
+
 class UserInfo extends Component {
     constructor(props){
         super(props);
@@ -13,6 +23,7 @@ class UserInfo extends Component {
 
 
     render(){
+        console.log(this.props);
         return(
             <View style ={styles.userInfoView}>
                 <View style = {styles.profilePictureView}>
@@ -22,10 +33,10 @@ class UserInfo extends Component {
                 </View>
                 <View style = {styles.nameView}>
                     <View style = {styles.firstnameView}>
-                        <Text style = {styles.nameText}>{ this.props.userInfo.firstname }</Text>
+                        <Text style = {styles.nameText}>{ this.props.profileData.firstname }</Text>
                     </View>
                     <View style = {styles.lastnameView}>
-                        <Text style = {styles.nameText}>{ this.props.userInfo.lastname }</Text>
+                        <Text style = {styles.nameText}>{ this.props.profileData.lastname }</Text>
                     </View>
                 </View>
             </View>
@@ -36,8 +47,6 @@ class UserInfo extends Component {
 const styles = StyleSheet.create({
     userInfoView: {
        flex: 1,
-       borderBottomWidth: 0.5,
-       borderBottomColor: "lightgrey",
     },
     profilePictureView:{
         alignItems: 'center',
@@ -68,4 +77,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default UserInfo;
+export default connect(mapStateToProps)(UserInfo);

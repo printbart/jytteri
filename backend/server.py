@@ -382,6 +382,62 @@ def getUserGuestEvents():
             })
     return jsonify(output)
 
+#edit firstname
+@app.route('/api/editFirstname', methods=['POST'])
+def editFirstname():
+    #input values
+    cur = mysql.connection.cursor()
+    userID = request.get_json()['userID']
+    firstname = request.get_json()['firstname']
+
+    #SQL
+    cur.execute("UPDATE Users SET firstname = '" + firstname + "' " +
+    "WHERE userID = " + str(userID))
+
+    cur.execute("SELECT userID, username, firstname, lastname FROM users WHERE userID = " + str(userID))
+
+    mysql.connection.commit()
+    data = cur.fetchall()
+
+    #formatting data into json
+    output = [] #new array to store our formatted data
+    if data:
+        output.append({
+            "userID": data[0][0],
+            "username": data[0][1],
+            "firstname": data[0][2],
+            "lastname": data[0][3]
+        })
+    return jsonify(output)
+
+#edit firstname
+@app.route('/api/editLastname', methods=['POST'])
+def editLastname():
+    #input values
+    cur = mysql.connection.cursor()
+    userID = request.get_json()['userID']
+    lastname = request.get_json()['lastname']
+
+    #SQL
+    cur.execute("UPDATE Users SET lastname = '" + lastname + "' " +
+    "WHERE userID = " + str(userID))
+
+    cur.execute("SELECT userID, username, firstname, lastname FROM users WHERE userID = " + str(userID))
+
+    mysql.connection.commit()
+    data = cur.fetchall()
+
+    #formatting data into json
+    output = [] #new array to store our formatted data
+    if data:
+        output.append({
+            "userID": data[0][0],
+            "username": data[0][1],
+            "firstname": data[0][2],
+            "lastname": data[0][3]
+        })
+    return jsonify(output)
+
 
 #main
 if __name__ == '__main__':

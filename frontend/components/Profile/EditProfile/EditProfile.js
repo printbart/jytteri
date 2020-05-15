@@ -25,8 +25,8 @@ class EditProfile extends Component {
             <View style = {styles.editProfileView}>
                 <EditProfilePicture />
                 <EditProfileInfo
-                navigateEditFirstName = {this.navigateEditFirstName}
-                navigateEditLastName = {this.navigateEditLastName}/>
+                    navigateEditFirstName = {this.navigateEditFirstName}
+                    navigateEditLastName = {this.navigateEditLastName}/>
             </View>
         )
     }
