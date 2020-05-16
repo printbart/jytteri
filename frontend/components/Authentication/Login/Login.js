@@ -107,8 +107,6 @@ const styles = StyleSheet.create({
     loginInputView:{
         flex: 1,
         justifyContent: 'center',
-        borderBottomWidth: 0.5,
-        borderBottomColor: "lightgrey",
     },
     input: {
         height: 40,

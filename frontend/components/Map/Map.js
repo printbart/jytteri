@@ -354,10 +354,8 @@ class Map extends Component {
               key={this.state.myMarker.eventID}
               coordinate={{latitude: this.state.myMarker.latitude, longitude: this.state.myMarker.longitude}}
               onPress={this.onPressMarker.bind(this, this.state.myMarker)}
-              pinColor = {"#000000"}
-              zIndex = {-1}>
-                <View style = {styles.myMarker}>
-                </View>
+              //pinColor = {"#000000"}
+              zIndex = {1}>
             </Marker>
           }
           {this.state.events.map((event) => { //all the events marker
@@ -367,9 +365,10 @@ class Map extends Component {
                 coordinate={{longitude: event.longitude, latitude: event.latitude}}
                 onPress = {this.onPressMarker.bind(this, event)}
                 pinColor = {"#123456"}>
+                  {!(this.state.myMarker && this.state.myMarker.latitude === event.latitude && this.state.myMarker.longitude === event.longitude) &&
                   <Image
                     source = {JytteriLogo}
-                    style = {[styles.eventMarker,event.startDate <= new Date() &&{opacity: 0.5} ]}/>
+                    style = {[styles.eventMarker,event.startDate >= new Date() &&{opacity: 0.5} ]}/>}
               </Marker>
             )
           })}

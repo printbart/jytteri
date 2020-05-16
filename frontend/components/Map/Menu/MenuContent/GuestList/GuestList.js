@@ -40,7 +40,9 @@ class GuestList extends Component {
         });
         fetch(request).then((response) => {
         response.json().then((data) => {
-            this.setState({guestEventList: data});
+            if(data[0].latitude){ //if data exist
+                this.setState({guestEventList: data});
+            }
         });
         }).catch(function(err){
         
@@ -79,12 +81,16 @@ class GuestList extends Component {
         return(
             <View style = {styles.templateView}>
                 <Text style = {styles.title}>Guest</Text>
+                {this.state.guestEventList && this.state.guestEventList.length != 0 ?
                 <SafeAreaView>
                     <FlatList
                         data = {this.state.guestEventList}
                         renderItem = {this.renderEvents}
                         keyExtractor = {(item)=>item.eventID.toString()}/>
-                </SafeAreaView>
+                </SafeAreaView>:
+                <View style = {styles.emptyNotificationView}>
+                    <Text style ={styles.emptyNotificationText}>No Guest at the moment</Text>
+                </View>}
             </View>
         )
     }
@@ -144,6 +150,16 @@ const styles = StyleSheet.create({
         fontFamily: 'Helvetica Neue',
         color: "#3C3C3D",
     },
+    emptyNotificationView:{
+        padding: 10,
+        alignItems: "center",
+    },
+    emptyNotificationText:{
+        fontSize: 20,
+        fontWeight: "300",
+        fontFamily: 'Helvetica Neue',
+        color: "#3C3C3D",
+    }
 });
 
 export default GuestList;

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, FlatList, Image } from 'react-native';
+import { StyleSheet, View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
 
 //image
 import defaultProfilePicture from '../../../../../Images/defaultProfilePicture.png';
@@ -13,7 +13,7 @@ class EventGuest extends Component {
 
     renderGuests = ({item}) => {
         return(
-            <View style = {styles.guestView}>
+            <TouchableOpacity style = {styles.guestView}>
                 <View style = {styles.profilePictureView}>
                     <Image
                         source = {defaultProfilePicture}
@@ -22,7 +22,7 @@ class EventGuest extends Component {
                 <View style = {styles.usernameView}>
                     <Text style = {styles.usernameText}>{item.username}</Text>
                 </View>
-            </View>
+            </TouchableOpacity>
         )
     }
 

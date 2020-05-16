@@ -39,19 +39,20 @@ class MenuContent extends Component {
             <View style = {styles.conditionView}>
                 <Image
                     source = {JytteriLogo}
-                    style = {[styles.logo, (item.startDate - new Date())<0 && {opacity: 0.3}]}/>
+                    style = {[styles.logo, (item.startDate - new Date())>=0 && {opacity: 0.5}]}/>
             </View>
             <View style = {styles.eventTitleView}>
                 <View>
                     <Text style = {styles.eventTitleText} numberOfLines={1}>{item.eventName}</Text>
                 </View>
-                <View>
-                    <Text style = {styles.eventAddressText} numberOfLines={2}>{item.locationAddress}</Text>
+                <View style ={{flexDirection: "row"}}>
+                    <Text style = {styles.eventHostNameHeaderText}> Hosted by </Text>
+                    <Text style = {styles.eventHostNameText} numberOfLines={2}>{item.hostName}</Text>
                 </View>
             </View>
             <View style = {styles.eventPopulationView}>
                 <View style = {styles.eventPopulationIconView}>
-                    <FontAwesome name="user-o" size={20} color="grey"/>
+                    <FontAwesome name="user-o" size={20} color="#3C3C3D"/>
                 </View>
                 <View style = {styles.eventPopulationCountView}>
                     <Text style = {styles.eventPopulationCountText}>{item.guestCount ? item.guestCount : 0}</Text>
@@ -67,10 +68,17 @@ class MenuContent extends Component {
     render(){
         return(
             <View style = {styles.bottomView}>
+                <View style = {styles.addressView}>
+                    <Text style = {styles.addressText}>{this.props.myMarker.locationAddress}</Text>
+                </View>
+                {this.props.myMarker.events.length ?
                 <FlatList
                     data = {this.props.myMarker.events}
                     renderItem = {this.renderEvents}
-                    keyExtractor = {(item)=>item.eventID.toString()}/>
+                    keyExtractor = {(item)=>item.eventID.toString()}/>:
+                <View style ={styles.empyDataView}>
+                    <Text style = {styles.emptyDataText}>No events at this location</Text>
+                </View>}
                 <TouchableOpacity style = {styles.addLocationButtonView} onPress = {this.onPressHostEvent}>
                     <Text style = {styles.addLocationButtonText}>Host</Text>
                 </TouchableOpacity>
@@ -78,10 +86,22 @@ class MenuContent extends Component {
         )
     }
 }
+
 const styles = StyleSheet.create({
     bottomView:{
         flex: 1,
         justifyContent: 'flex-end',
+    },
+    addressView: {
+        alignItems: "center",
+        margin: 10,
+        marginBottom: 0,
+        backgroundColor: "#F9A908",
+        borderRadius: 10,
+        opacity: 0.7
+    },
+    addressText: {
+        color: "white",
     },
     addLocationButtonView:{
         width: "100%",
@@ -119,9 +139,15 @@ const styles = StyleSheet.create({
         fontFamily: 'Helvetica Neue',
         color: "#3C3C3D",
     },
-    eventAddressText:{
+    eventHostNameHeaderText:{
         fontSize: 10,
         fontWeight: "300",
+        fontFamily: 'Helvetica Neue',
+        color: "#3C3C3D",
+    },
+    eventHostNameText: {
+        fontSize: 10,
+        fontWeight: "500",
         fontFamily: 'Helvetica Neue',
         color: "#3C3C3D",
     },
@@ -150,6 +176,17 @@ const styles = StyleSheet.create({
     },
     eventJoinButtonText:{
         fontSize: 20,
+        fontFamily: 'Helvetica Neue',
+        color: "#3C3C3D",
+    },
+    empyDataView:{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    emptyDataText:{
+        fontSize: 20,
+        fontWeight: "300",
         fontFamily: 'Helvetica Neue',
         color: "#3C3C3D",
     }

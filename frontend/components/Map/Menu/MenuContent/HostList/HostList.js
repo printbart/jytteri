@@ -78,12 +78,16 @@ class HostList extends Component {
         return(
             <View style = {styles.hostView}>
                 <Text style = {styles.title}>Host</Text>
+                {this.state.hostEventList && this.state.hostEventList.length != 0 ?
                 <SafeAreaView>
                     <FlatList
                         data = {this.state.hostEventList}
                         renderItem = {this.renderEvents}
                         keyExtractor = {(item)=>item.eventID.toString()}/>
-                </SafeAreaView>
+                </SafeAreaView>:
+                <View style = {styles.emptyNotificationView}>
+                    <Text style ={styles.emptyNotificationText}>No Host at the moment</Text>
+                </View>}
             </View>
         )
     }
@@ -143,6 +147,16 @@ const styles = StyleSheet.create({
         fontFamily: 'Helvetica Neue',
         color: "#3C3C3D",
     },
+    emptyNotificationView:{
+        padding: 10,
+        alignItems: "center",
+    },
+    emptyNotificationText:{
+        fontSize: 20,
+        fontWeight: "300",
+        fontFamily: 'Helvetica Neue',
+        color: "#3C3C3D",
+    }
     
 });
 
