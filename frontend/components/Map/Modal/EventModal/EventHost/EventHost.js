@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 
 //image
 import defaultProfilePicture from '../../../../../Images/defaultProfilePicture.png';
@@ -19,9 +19,17 @@ class EventHost extends Component {
                 </View>
                 <View style = {styles.infoView}>
                     <View style = {styles.profilePictureView}>
-                        <Image
-                            source = {defaultProfilePicture}
-                            style = {styles.profilePicture}/>
+                        {this.props.navigateToUser ?  //if its regular modal
+                        <TouchableOpacity onPress = {this.props.navigateToUser.bind(this,this.props.hostID)}>
+                            <Image
+                                source = {defaultProfilePicture}
+                                style = {styles.profilePicture}/>
+                        </TouchableOpacity>:  //if its edit modal
+                        <View>
+                            <Image
+                                source = {defaultProfilePicture}
+                                style = {styles.profilePicture}/>
+                        </View>}
                     </View>
                     <View style = {styles.usernameView}>
                         <Text style = {styles.usernameText}>{this.props.hostName}</Text>

@@ -63,7 +63,11 @@ const AuthenticationStackNavigator = () => {
 const ProfileStackNavigator = () => {
     return(
         <ProfileStack.Navigator>
-            <ProfileStack.Screen name = "profile" component = {Profile} options={{headerShown: false, }}/>
+            <ProfileStack.Screen name = "profile" component = {Profile}
+            options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+            }}/>
             <ProfileStack.Screen
             name = "editprofile"
             component = {EditProfile}

@@ -14,12 +14,14 @@ import LeaveButton from './LeaveButton/LeaveButton';
 
 //modal
 import EditEventModal from './EditEventModal/EditEventModal';
+import UserProfileModal from '../UserProfileModal/UserProfileModal';
 
 class EventModal extends Component {
     constructor(props){
         super(props);
         this.state = {
-            editEventModalVisible: false
+            editEventModalVisible: false,
+            userProfileModalVisible: false,
         }
     }
 
@@ -56,6 +58,30 @@ class EventModal extends Component {
         this.setState({editEventModalVisible: !this.state.editEventModalVisible})
     }
 
+    //toggle user profile modal visible
+    userProfileModalToggle = (data) => {
+        this.setState({userProfileModalVisible: !this.state.userProfileModalVisible, userProfileModalData: data});
+    }
+
+    //get search user information
+    getUserInfo = (userID) => {
+        const info = {
+            userID: userID
+        };
+        var request = new Request('http://localhost:5000/api/getUserInfo', {
+            method: 'POST',
+            headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),
+            body: JSON.stringify(info)
+        });
+        fetch(request).then((response) => {
+            response.json().then((data) => {
+                this.userProfileModalToggle(data);
+            });
+        }).catch(function(err){
+            console.log(err);
+        });
+    }
+
     render(){
         return(
             <Modal
@@ -70,6 +96,10 @@ class EventModal extends Component {
                         currentEventItem = {this.props.currentEventItem} //get current event item
                         editEvent = {this.editEvent} //edit data on modal data
                         />
+                    <UserProfileModal
+                        userProfileModalVisible = {this.state.userProfileModalVisible}
+                        userProfileModalToggle = {this.userProfileModalToggle}
+                        userProfileModalData = {this.state.userProfileModalData}/>
                     <EventHeader 
                         editEventToggle = {this.editEventModalToggle}
                         closeEventModal = {this.closeEventModal}/>
@@ -82,9 +112,12 @@ class EventModal extends Component {
                         title = "End time"
                         chosenDate = {this.props.currentEventItem.endDate}/>
                     <EventHost
-                        hostName = {this.props.currentEventItem.hostName}/>
+                        hostID = {this.props.currentEventItem.hostID}
+                        hostName = {this.props.currentEventItem.hostName}
+                        navigateToUser = {this.getUserInfo}/>
                     <EventGuest
-                        guests = {this.props.currentEventItem.guests}/>
+                        guests = {this.props.currentEventItem.guests}
+                        navigateToUser = {this.getUserInfo}/>
                     <LeaveButton
                         leaveEvent = {this.leaveEventType}/>
                 </View>}

@@ -13,7 +13,7 @@ class EventGuest extends Component {
 
     renderGuests = ({item}) => {
         return(
-            <TouchableOpacity style = {styles.guestView}>
+            <TouchableOpacity style = {styles.guestView} onPress = {this.props.navigateToUser.bind(this,item.userID)}>
                 <View style = {styles.profilePictureView}>
                     <Image
                         source = {defaultProfilePicture}

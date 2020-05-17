@@ -69,7 +69,9 @@ class MenuContent extends Component {
         return(
             <View style = {styles.bottomView}>
                 <View style = {styles.addressView}>
-                    <Text style = {styles.addressText}>{this.props.myMarker.locationAddress}</Text>
+                    <View style = {styles.addressViews}>
+                        <Text style = {styles.addressText}>{this.props.myMarker.locationAddress}</Text>
+                    </View>
                 </View>
                 {this.props.myMarker.events.length ?
                 <FlatList
@@ -94,11 +96,15 @@ const styles = StyleSheet.create({
     },
     addressView: {
         alignItems: "center",
-        margin: 10,
-        marginBottom: 0,
-        backgroundColor: "#F9A908",
+
+    },
+    addressViews:{
+        alignItems: "center",
+        backgroundColor: "#C3C3CD",
         borderRadius: 10,
-        opacity: 0.7
+        padding: 5,
+        opacity: 0.7,
+        marginTop: 15,
     },
     addressText: {
         color: "white",

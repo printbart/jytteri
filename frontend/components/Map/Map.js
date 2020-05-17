@@ -71,6 +71,15 @@ class Map extends Component {
     this.setState({myMarker: null});
   }
 
+  //navigate to user profile
+  navigateToUser = async (userID) => {
+    this.toggleEventModal(false);
+    this.props.navigation.navigate('home', {
+      screen: 'userprofile',
+      params: { userID: userID },
+    });
+  }
+
   //center your current location
   centerMyLocation = () => {
     const{ latitude, longitude, latitudeDelta, longitudeDelta } = this.state.myCurrentPosition;
@@ -336,6 +345,7 @@ class Map extends Component {
           editEventInfo = {this.editEventInfo}
           leaveEvent = {this.leaveEvent}
           deleteEvent = {this.deleteEvent}
+          navigateToUser = {this.navigateToUser}
           />
         <HostEventModal
           visible = {this.state.hostEventModalVisible}
