@@ -67,7 +67,7 @@ class GuestList extends Component {
                 </View>
                 <View style = {styles.eventPopulationView}>
                     <View style = {styles.eventPopulationIconView}>
-                        <FontAwesome name="user-o" size={20} color="grey"/>
+                        <FontAwesome name="user-o" size={20} color="black"/>
                     </View>
                     <View style = {styles.eventPopulationCountView}>
                         <Text style = {styles.eventPopulationCountText}>{item.guestCount ? item.guestCount : 0}</Text>

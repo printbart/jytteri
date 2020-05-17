@@ -15,6 +15,9 @@ import Menu from './Menu/Menu';
 import EventModal from './Modal/EventModal/EventModal';
 import HostEventModal from './Modal/HostEventModal/HostEventModal';
 
+//mapstyle json
+import MapStyle from './MapStyle.json';
+
 //marker
 import JytteriLogo from '../../Images/JytteriLogo.png';
 
@@ -69,15 +72,6 @@ class Map extends Component {
   goBack = () => {
     this.centerMyLocation();
     this.setState({myMarker: null});
-  }
-
-  //navigate to user profile
-  navigateToUser = async (userID) => {
-    this.toggleEventModal(false);
-    this.props.navigation.navigate('home', {
-      screen: 'userprofile',
-      params: { userID: userID },
-    });
   }
 
   //center your current location
@@ -345,7 +339,6 @@ class Map extends Component {
           editEventInfo = {this.editEventInfo}
           leaveEvent = {this.leaveEvent}
           deleteEvent = {this.deleteEvent}
-          navigateToUser = {this.navigateToUser}
           />
         <HostEventModal
           visible = {this.state.hostEventModalVisible}
@@ -357,6 +350,7 @@ class Map extends Component {
           ref={(map) => {this.map = map}}
           showsUserLocation={true}
           provider = {PROVIDER_GOOGLE}
+          customMapStyle={MapStyle}
           initialRegion = {this.state.myCurrentPosition}>
 
           {this.state.myMarker && //user searched marker
