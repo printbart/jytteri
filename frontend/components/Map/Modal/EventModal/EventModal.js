@@ -25,6 +25,8 @@ class EventModal extends Component {
         }
     }
 
+
+
     //close search modal
     closeEventModal = () => {
         this.props.toggleEventModal(false);
@@ -63,6 +65,14 @@ class EventModal extends Component {
         this.setState({userProfileModalVisible: !this.state.userProfileModalVisible, userProfileModalData: data});
     }
 
+    navigateToUser = async (userID) => {
+        if(userID === Number(await AsyncStorage.getItem('userID'))){
+            this.props.navigateToProfile();
+        }
+        else{
+            this.getUserInfo(userID);
+        }
+    }
     //get search user information
     getUserInfo = (userID) => {
         const info = {
@@ -100,9 +110,10 @@ class EventModal extends Component {
                         userProfileModalVisible = {this.state.userProfileModalVisible}
                         userProfileModalToggle = {this.userProfileModalToggle}
                         userProfileModalData = {this.state.userProfileModalData}/>
-                    <EventHeader 
+                    <EventHeader
                         editEventToggle = {this.editEventModalToggle}
-                        closeEventModal = {this.closeEventModal}/>
+                        closeEventModal = {this.closeEventModal}
+                        hostID = {this.props.currentEventItem.hostID}/>
                     <EventTitle
                         title = {this.props.currentEventItem.eventName}/>
                     <EventDate
@@ -114,10 +125,10 @@ class EventModal extends Component {
                     <EventHost
                         hostID = {this.props.currentEventItem.hostID}
                         hostName = {this.props.currentEventItem.hostName}
-                        navigateToUser = {this.getUserInfo}/>
+                        navigateToUser = {this.navigateToUser}/>
                     <EventGuest
                         guests = {this.props.currentEventItem.guests}
-                        navigateToUser = {this.getUserInfo}/>
+                        navigateToUser = {this.navigateToUser}/>
                     <LeaveButton
                         leaveEvent = {this.leaveEventType}/>
                 </View>}

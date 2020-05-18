@@ -4,12 +4,20 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 //components
 import CloseModalButton from '../../ModalComponents/CloseModalButton/CloseModalButton';
 
+//packages
+import AsyncStorage from '@react-native-community/async-storage';
+
 class EventHeader extends Component {
     constructor(props){
         super(props);
         this.state = {
         }
     }
+
+    async componentDidMount(){
+        this.setState({myEventState: this.props.hostID === Number(await AsyncStorage.getItem('userID'))});
+    }
+
 
     render(){
         return(
@@ -21,9 +29,12 @@ class EventHeader extends Component {
                 <View style = {styles.eventTitleView}>
                     <Text style = {styles.eventTitleText}>Event</Text>
                 </View>
+                {this.state.myEventState ?
                 <TouchableOpacity style = {styles.eventSaveView} onPress = {this.props.editEventToggle}>
                     <Text style = {styles.eventEditText}>Edit</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> :
+                <View style = {styles.eventSaveView}>
+                </View>}
             </View>
         )
     }

@@ -22,9 +22,9 @@ class HostList extends Component {
     }
 
     //when event is pressed
-    async onPressEvent(item){
-        await this.props.searchLocation(item)
-        await this.props.openEventModal(item);
+    onPressEvent(item){
+        this.props.searchLocation(item);
+        this.props.openEventModal(item);
     }
 
     //get user host event

@@ -163,7 +163,7 @@ def storeEvent():
     endDate = request.get_json()['endDate']
 
     #SQL
-    #query 1) update event location if data exist. else add data
+    #query 1) insert event location
     cur.execute(
     "INSERT INTO events SET "+
     "hostID = " + str(hostID) +

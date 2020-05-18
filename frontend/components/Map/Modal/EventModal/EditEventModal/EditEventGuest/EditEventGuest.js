@@ -40,13 +40,13 @@ class EditEventGuest extends Component {
                 <View style = {styles.headercenterView}>
                     <Text style = {styles.headerCenterText}>Guest</Text>
                 </View>
-                {this.props.guests ?
+                {this.props.guests.length ?
                 <FlatList
                     data = {this.props.guests}
                     renderItem = {this.renderGuests}
                     keyExtractor = {(item)=>item.userID.toString()}/> :
                 <View style = {styles.noneMessageView}>
-                    <Text style = {styles.noneMessage}>No one at the moment</Text>
+                    <Text style = {styles.noneMessageText}>No one at the moment</Text>
                 </View>}
             </View>
         )
@@ -99,6 +99,16 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         alignItems: "center",
         paddingRight: 2,
+    },
+    noneMessageView: {
+        padding: 10,
+        alignItems: "center",
+    },
+    noneMessageText: {
+        fontSize: 20,
+        fontWeight: "300",
+        fontFamily: 'Helvetica Neue',
+        color: "#3C3C3D",
     }
 });
 

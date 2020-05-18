@@ -19,7 +19,7 @@ class EventHeader extends Component {
                         closeModal={this.props.closeEventModal}/>
                 </View>
                 <View style = {styles.eventTitleView}>
-                    <Text style = {styles.eventTitleText}>Event</Text>
+                    <Text style = {styles.eventTitleText}>Host Event</Text>
                 </View>
                 <TouchableOpacity style = {styles.eventSaveView} onPress = {this.props.saveEvent}>
                     <Text style = {styles.eventSaveText}>Save</Text>
@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
     },
     eventSaveText: {
         fontSize: 15,
+        fontWeight: "500",
         color: "white",
     }
 });

@@ -13,7 +13,6 @@ class UserInfo extends Component {
 
 
     render(){
-        console.log(this.props.userData.firstname);
         return(
             <View style ={styles.userInfoView}>
                 <View style = {styles.profilePictureView}>

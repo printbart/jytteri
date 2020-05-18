@@ -109,20 +109,6 @@ const styles = StyleSheet.create({
     addressText: {
         color: "white",
     },
-    addLocationButtonView:{
-        width: "100%",
-        alignItems: 'center',
-        backgroundColor: "#F9A908",
-        margin: 5,
-        padding: 5,
-        borderRadius: 10,
-    },
-    addLocationButtonText:{
-        color: "white",
-        fontSize: 20,
-        fontWeight: "bold",
-        fontFamily: 'Helvetica Neue',
-    },
     eventView:{
         margin: 5,
         padding: 5,
@@ -183,7 +169,8 @@ const styles = StyleSheet.create({
     eventJoinButtonText:{
         fontSize: 20,
         fontFamily: 'Helvetica Neue',
-        color: "#3C3C3D",
+        fontWeight: "500",
+        color: "#F9A908",
     },
     empyDataView:{
         flex: 1,
@@ -195,7 +182,21 @@ const styles = StyleSheet.create({
         fontWeight: "300",
         fontFamily: 'Helvetica Neue',
         color: "#3C3C3D",
-    }
+    },
+    addLocationButtonView:{
+        width: "100%",
+        alignItems: 'center',
+        backgroundColor: "#F9A908",
+        margin: 5,
+        padding: 5,
+        borderRadius: 10,
+    },
+    addLocationButtonText:{
+        color: "white",
+        fontSize: 20,
+        fontWeight: "bold",
+        fontFamily: 'Helvetica Neue',
+    },
 });
 
 export default MenuContent;

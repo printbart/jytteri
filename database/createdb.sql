@@ -23,7 +23,7 @@ CREATE TABLE Events (
     hostID INT NOT NULL,
     eventName VARCHAR(31),
     locationID TEXT,
-    locationName VARCHAR(31),
+    locationName VARCHAR(63),
     locationAddress VARCHAR(255),
     longitude DOUBLE,
     latitude DOUBLE,

@@ -38,6 +38,12 @@ class Map extends Component {
     this.setEventsOnMap();
   }
 
+  navigateToProfile = () => {
+    this.toggleEventModal(false);
+    this.props.navigation.navigate("home");
+  }
+
+
   //toggle search modal
   toggleSearchModal = (type) => {
     this.setState({searchModalVisible: type});
@@ -100,8 +106,8 @@ class Map extends Component {
         const myCurrentPosition = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          latitudeDelta: 0.09,
-          longitudeDelta: 0.035,
+          latitudeDelta: 0.03,
+          longitudeDelta: 0.03,
         }
 
         this.setState({ myCurrentPosition });
@@ -157,6 +163,7 @@ class Map extends Component {
     myMarker['eventName'] = eventName;
     myMarker['startDate'] = startDate;
     myMarker['endDate'] = endDate;
+    console.log(myMarker);
     let request = new Request('http://localhost:5000/api/storeEvent', {
       method: 'POST',
       headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),
@@ -166,11 +173,6 @@ class Map extends Component {
       response.json().then((data) => {
         let events = JSON.parse(JSON.stringify(this.state.events)); //all the events
         myMarker['events'] = data; // store all the data inside 
-        for(var i in events){ // check all the events to see if user has other events hosted
-          if(Number(events[i].hostID) === Number(myMarker.hostID)){
-            events.splice(i, 1); //delete event user hosted
-          }
-        }
         events.push(myMarker);
 
         this.setState({myMarker: myMarker, events: events});
@@ -234,8 +236,8 @@ class Map extends Component {
       locationAddress: item.formatted_address ? item.formatted_address : item.locationAddress,
       latitude: item.geometry ? item.geometry.location.lat : item.latitude,
       longitude: item.geometry ? item.geometry.location.lng : item.longitude,
-      latitudeDelta: 0.09,
-      longitudeDelta: 0.035,
+      latitudeDelta: 0.015,
+      longitudeDelta: 0.015,
     };
 
     var request = new Request('http://localhost:5000/api/searchLocationEvents', {
@@ -270,33 +272,6 @@ class Map extends Component {
         if(data.result){
           this.searchLocation(item); //refresh
         }
-      });
-    }).catch(function(err){
-      console.log(err);
-    });
-  }
-
-  //save location into database
-  storeLocation = () => {
-    const event = this.state.myMarker; //user searched location position
-    var request = new Request('http://localhost:5000/api/storeEvent', {
-      method: 'POST',
-      headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),
-      body: JSON.stringify(event)
-    });
-    fetch(request).then((response) => {
-      response.json().then((data) => {
-        const myMarker =  JSON.parse(JSON.stringify(this.state.myMarker)); //my current marker data
-        const events = JSON.parse(JSON.stringify(this.state.events)); //all the events
-        myMarker['events'] = data; // store all the data inside 
-        for(var i in events){ // check all the events to see if user has other events hosted
-          if(Number(events[i].hostID) === Number(myMarker.hostID)){
-            events.splice(i, 1); //delete event user hosted
-          }
-        }
-        events.push(myMarker);
-
-        this.setState({myMarker: myMarker, events: events});
       });
     }).catch(function(err){
       console.log(err);
@@ -339,6 +314,7 @@ class Map extends Component {
           editEventInfo = {this.editEventInfo}
           leaveEvent = {this.leaveEvent}
           deleteEvent = {this.deleteEvent}
+          navigateToProfile = {this.navigateToProfile}
           />
         <HostEventModal
           visible = {this.state.hostEventModalVisible}
@@ -385,7 +361,6 @@ class Map extends Component {
         <Menu 
           toggleSearchModal = {this.toggleSearchModal}
           myMarker = {this.state.myMarker}
-          storeLocation = {this.storeLocation}
           toggleEventModal = {this.toggleEventModal}
           toggleHostEventModal = {this.toggleHostEventModal}
           joinEvent = {this.joinEvent}

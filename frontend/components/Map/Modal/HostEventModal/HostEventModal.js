@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Modal, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { StyleSheet, View, Modal, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 
 //components
@@ -71,8 +71,16 @@ class HostEventModal extends Component {
 
     //save event
     saveEvent = () =>{
-        this.closeEventModal();
-        this.props.saveEventInfo(this.state.title, this.state.chosenStartDate.getTime(), this.state.chosenEndDate.getTime());
+        if(this.state.chosenEndDate - this.state.chosenStartDate < 0){
+            Alert.alert('Invalid date', 'Please try again', [{text: 'OK'}]);
+        }
+        else if(this.state.title.length<3){
+            Alert.alert('Invalid Title', 'Title must be between 3 to ?', [{text: 'OK'}]);
+        }
+        else{
+            this.closeEventModal();
+            this.props.saveEventInfo(this.state.title, this.state.chosenStartDate.getTime(), this.state.chosenEndDate.getTime());
+        }
     }
 
     render(){

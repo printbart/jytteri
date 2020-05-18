@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 
-//packages
-import AsyncStorage from '@react-native-community/async-storage';
-
 //logo
 import JytteriLogo from '../../../Images/JytteriLogo.png';
 
 //components
+import Type from './Type/Type';
 import Name from './Name/Name';
 import Username from './Username/Username';
 import Password from './Password/Password';
@@ -90,11 +88,13 @@ class Login extends Component {
                     </View>
                     <View style = {styles.inputView}>
                         {this.state.page === 0 ?
+                        <Type />:
+                        this.state.page === 1 ?
                         <Name
                             onPressNext = {this.onPressNext}
                             firstname = {this.setFirstName}
                             lastname = {this.setLastName}/>:
-                        this.state.page === 1 ?
+                        this.state.page === 2 ?
                         <Username
                             onPressNext = {this.onPressNext}
                             username = {this.setUsername}/>:
