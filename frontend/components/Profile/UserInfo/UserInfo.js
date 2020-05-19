@@ -21,7 +21,6 @@ class UserInfo extends Component {
         }
     }
 
-
     render(){
         return(
             <View style ={styles.userInfoView}>

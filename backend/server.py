@@ -28,15 +28,20 @@ def register():
     username = request.get_json()['username']
     password = bcrpyt.generate_password_hash(request.get_json()['password']).decode('utf-8') #encrypted
 
+    #query 1) insert reigstered information
     cur.execute("INSERT INTO users (username, firstname, lastname, password) VALUES ('" +
     username +"','" + firstname + "','" + lastname + "','" +password+"')")
 
+    #query 2) grab information
+    cur.execute("SELECT userID FROM users WHERE username = '" + username + "'")
+
     mysql.connection.commit()
+    data = cur.fetchall()
 
     output = {
-        "state": True,
+        "userID": data[0][0],
     }
-    return jsonify({"result": output})
+    return jsonify(output)
 
 #login register api
 @app.route('/api/login', methods=['POST'])

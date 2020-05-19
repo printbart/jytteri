@@ -35,7 +35,7 @@ class Name extends Component {
                 <View style = {styles.titleView}>
                     {this.state.type === 0 ?
                     <Text style = {styles.titleText}>What is your name?</Text>:
-                    <Text style = {styles.titleText}>What is your organizations name?</Text>}
+                    <Text style = {styles.titleText}>What is your organization's name?</Text>}
                 </View>
                 {this.state.type === 0  ? 
                 <View style = {styles.nameInputView}>
@@ -61,11 +61,10 @@ class Name extends Component {
                 </View> : 
                 <View style = {styles.nameInputView}>
                     <TextInput
-                        placeholder="orgname"
+                        placeholder="organization name"
                         style={styles.nameInput}
-                        value = {this.props.orgnameValue}
-                        ref = {(input) => {this.orgNameInput = input; }}
-                        onChangeText={(orgname) => this.props.orgname(orgname)}
+                        value = {this.props.firstnameValue}
+                        onChangeText={(firstname) => this.props.firstname(firstname)}
                         onSubmitEditing={ this.props.onPressNext }
                         maxLength={32}
                         autoCorrect={false}

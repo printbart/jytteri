@@ -4,8 +4,10 @@ import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, KeyboardAvo
 //logo
 import JytteriLogo from '../../../Images/JytteriLogo.png';
 
+//packages
+import AsyncStorage from '@react-native-community/async-storage';
+
 //components
-import Type from './Type/Type';
 import Name from './Name/Name';
 import Username from './Username/Username';
 import Password from './Password/Password';
@@ -15,11 +17,7 @@ class Login extends Component {
         super(props);
         this.state = {
             page: 0, //0: name, 1: username, 2: password
-            firstname: "",
             lastname: "",
-            username: "",
-            password: "",
-            orgname: "",
         }
     }
 
@@ -35,7 +33,6 @@ class Login extends Component {
 
     //when pressed return on keyboard
     onPressNext = () => {
-        console.log(this.state.page);
         this.setState({page: this.state.page+1});
     }
 
@@ -71,7 +68,6 @@ class Login extends Component {
             lastname: this.state.lastname,
             username: this.state.username,
             password: this.state.password,
-            orgname: this.state.orgname,
           }
           console.log(data);
           var request = new Request('http://localhost:5000/api/register', {
@@ -80,10 +76,9 @@ class Login extends Component {
             body: JSON.stringify(data)
           });
           fetch(request).then((response) => {
-            response.json().then((data) => {
-                if(data.result){
-                    this.props.navigation.navigate("root");
-                }
+            response.json().then(async(data) => {
+                await AsyncStorage.setItem('userID', data.userID.toString()); //store userID globally
+                this.props.navigation.navigate("root");
             });
           }).catch(function(err){
             console.log(err);
@@ -91,7 +86,6 @@ class Login extends Component {
     }
 
     render(){
-        console.log(this.state);
         return(
             <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
                 <View style = {styles.loginView}>
@@ -106,10 +100,8 @@ class Login extends Component {
                             onPressNext = {this.onPressNext}
                             firstname = {this.setFirstName}
                             lastname = {this.setLastName}
-                            orgname = {this.setOrgName}
                             firstnameValue = {this.state.firstname}
-                            lastnameValue = {this.state.lastname}
-                            orgnameValue = {this.state.orgname}/>:
+                            lastnameValue = {this.state.lastname}/>:
                         this.state.page === 1 ?
                         <Username
                             onPressNext = {this.onPressNext}
@@ -118,9 +110,11 @@ class Login extends Component {
                             password = {this.setPassword}
                             register = {this.onPressRegister}/>}
                     </View>
-                    <TouchableOpacity style = {styles.backView} onPress = {this.onPressHome}>
-                        <Text style = {styles.backText}>Go Back</Text>
-                    </TouchableOpacity>
+                    <View style = {styles.backView}>
+                        <TouchableOpacity onPress = {this.onPressHome}>
+                            <Text style = {styles.backText}>Go Back</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </KeyboardAvoidingView>
         )
@@ -155,7 +149,7 @@ const styles = StyleSheet.create({
     backView: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     backText: {
         color: "#F9A908",
