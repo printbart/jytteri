@@ -15,6 +15,11 @@ class Login extends Component {
         super(props);
         this.state = {
             page: 0, //0: name, 1: username, 2: password
+            firstname: "",
+            lastname: "",
+            username: "",
+            password: "",
+            orgname: "",
         }
     }
 
@@ -30,22 +35,28 @@ class Login extends Component {
 
     //when pressed return on keyboard
     onPressNext = () => {
+        console.log(this.state.page);
         this.setState({page: this.state.page+1});
     }
 
     //set firstname on keyboard change
     setFirstName = (firstname) => {
-        this.setState({firstname: firstname})
+        this.setState({firstname: firstname});
     }
 
     //set lastname on keyboard change
     setLastName = (lastname) => {
-        this.setState({lastname: lastname})
+        this.setState({lastname: lastname});
+    }
+
+    //set org name on keyboard change
+    setOrgName = (orgname) => {
+        this.setState({orgname: orgname});
     }
 
     //set username on keyboard change
     setUsername = (username) => {
-        this.setState({username: username});
+        this.setState({username: username});;
     }
 
     //set password on keyboard change
@@ -60,7 +71,9 @@ class Login extends Component {
             lastname: this.state.lastname,
             username: this.state.username,
             password: this.state.password,
+            orgname: this.state.orgname,
           }
+          console.log(data);
           var request = new Request('http://localhost:5000/api/register', {
             method: 'POST',
             headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),
@@ -78,6 +91,7 @@ class Login extends Component {
     }
 
     render(){
+        console.log(this.state);
         return(
             <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
                 <View style = {styles.loginView}>
@@ -88,13 +102,15 @@ class Login extends Component {
                     </View>
                     <View style = {styles.inputView}>
                         {this.state.page === 0 ?
-                        <Type />:
-                        this.state.page === 1 ?
                         <Name
                             onPressNext = {this.onPressNext}
                             firstname = {this.setFirstName}
-                            lastname = {this.setLastName}/>:
-                        this.state.page === 2 ?
+                            lastname = {this.setLastName}
+                            orgname = {this.setOrgName}
+                            firstnameValue = {this.state.firstname}
+                            lastnameValue = {this.state.lastname}
+                            orgnameValue = {this.state.orgname}/>:
+                        this.state.page === 1 ?
                         <Username
                             onPressNext = {this.onPressNext}
                             username = {this.setUsername}/>:
