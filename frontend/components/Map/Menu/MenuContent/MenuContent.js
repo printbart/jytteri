@@ -39,7 +39,7 @@ class MenuContent extends Component {
             <View style = {styles.conditionView}>
                 <Image
                     source = {JytteriLogo}
-                    style = {[styles.logo, (item.startDate - new Date())>=0 && {opacity: 0.5}]}/>
+                    style = {[styles.logo, (item.startDate - new Date()) >=0 && {opacity: 0.5}]}/>
             </View>
             <View style = {styles.eventTitleView}>
                 <View>

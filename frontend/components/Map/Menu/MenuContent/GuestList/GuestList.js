@@ -80,7 +80,6 @@ class GuestList extends Component {
     render(){
         return(
             <View style = {styles.templateView}>
-                <Text style = {styles.title}>Guest</Text>
                 {this.state.guestEventList && this.state.guestEventList.length != 0 ?
                 <SafeAreaView>
                     <FlatList
@@ -97,12 +96,6 @@ class GuestList extends Component {
 }
 const styles = StyleSheet.create({
     hostView:{
-    },
-    title: {
-        textAlign: "center",
-        fontSize: 15,
-        fontWeight: "500",
-        fontFamily: 'Helvetica Neue',
     },
     eventView:{
         margin: 5,
