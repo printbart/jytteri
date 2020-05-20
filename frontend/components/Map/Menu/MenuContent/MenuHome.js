@@ -19,7 +19,6 @@ class MenuHome extends Component {
     }
 
     render(){
-        console.log(this.state);
         return(
             <ScrollView style = {styles.noticeView}>
                 <Text style = {styles.notice}>Find a location</Text>
@@ -37,6 +36,7 @@ class MenuHome extends Component {
         )
     }
 }
+
 const styles = StyleSheet.create({
     noticeView: {
         flex: 1,

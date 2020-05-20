@@ -6,6 +6,7 @@ import { request, PERMISSIONS } from 'react-native-permissions';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import AsyncStorage from '@react-native-community/async-storage';
+import io from "socket.io-client";
 
 //components
 import SearchModal from './Modal/SearchModal/SearchModal';
@@ -36,6 +37,7 @@ class Map extends Component {
   componentDidMount(){
     this.requestLocationPermission();
     this.setEventsOnMap();
+    //const socket = io("http://localhost:5000");
   }
 
   navigateToProfile = () => {
@@ -163,7 +165,6 @@ class Map extends Component {
     myMarker['eventName'] = eventName;
     myMarker['startDate'] = startDate;
     myMarker['endDate'] = endDate;
-    console.log(myMarker);
     let request = new Request('http://localhost:5000/api/storeEvent', {
       method: 'POST',
       headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),

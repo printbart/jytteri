@@ -69,7 +69,6 @@ class Login extends Component {
             username: this.state.username,
             password: this.state.password,
           }
-          console.log(data);
           var request = new Request('http://localhost:5000/api/register', {
             method: 'POST',
             headers: new Headers({ 'Content-Type' : 'application/json', 'Accept': 'application/json' }),

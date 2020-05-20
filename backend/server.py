@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify, json
 from flask_mysqldb import MySQL
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
+from flask_socketio import SocketIO, send, emit
 
 import yaml #authentication file
 
@@ -17,7 +18,13 @@ app.config['MYSQL_DB'] = db['mysqlDB'] #Database Name
 
 mysql = MySQL(app)
 bcrpyt = Bcrypt(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 CORS(app)
+
+#socket
+@socketio.on('message')
+def handleMessage(message):
+    print("test")
 
 #register register api
 @app.route('/api/register', methods=['POST'])
@@ -452,4 +459,4 @@ def editLastname():
 
 #main
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app)
