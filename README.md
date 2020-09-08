@@ -41,7 +41,7 @@ npm install npm@latest -g
 To get the frontend running locally:
 
 - Clone this repo
-- navigate to /frontend directory
+- navigate to `/frontend` directory
 - `npm install` to install all required dependencies 
 - `npx react-native run-ios` or `npx react-native run-ios` depending on the device to start the local server mobile application
 
@@ -50,11 +50,14 @@ To get the frontend running locally:
 To get the backend running locally:
 
 - Clone this repo
-- navigate to /backend directory
+- navigate to `/backend` directory
 - Create your own local flask env
 - `python server.py` to run the flask server
 
-
+Database:
+- clone this repo
+- navigate to `/database` directory
+- Create all the tables that is inside `createdb.sql`
 
 NOTE: This application will not run locally unless:
 1. You will need to set up a local MySQL DB and connect it to the `./backend/app.js`.
